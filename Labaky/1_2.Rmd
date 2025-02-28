@@ -1,0 +1,99 @@
+---
+title: "1_2"
+author: "xkokin"
+date: "2025-02-23"
+output: html_document
+---
+
+# load libraries
+library(tidyverse)
+
+# load data
+data <- read_csv("players_22.csv")
+
+# inspect structure
+glimpse(data)
+summary(data)
+head(data, 1)
+
+# define positions
+offense_positions <- c("LF", "CF", "RF", "LW", "RW", "LS", "ST", "RS")
+defense_positions <- c("LWB", "RWB", "LCB", "CB", "RCB", "LB", "RB")
+midfield_positions <- c("LM", "LAM", "CM", "RM", "RAM", "CAM", "CDM", "DM", "LDM", "RDM")
+goalkeepers <- c("GK")
+
+
+# Assign categories based on club_position
+data <- data %>%
+  mutate(position_category = case_when(
+    str_detect(player_positions, paste(offense_positions, collapse = "|")) ~ "Offense",
+    str_detect(player_positions, paste(defense_positions, collapse = "|")) ~ "Defense",
+    str_detect(player_positions, paste(midfield_positions, collapse = "|")) ~ "Midfield",
+    str_detect(player_positions, paste(goalkeepers, collapse = "|")) ~ "Goalkeeper",
+    TRUE ~ "Unknown"
+  ))
+  
+# count left-footed players by positio
+left_footed_distribution <- data %>%
+  filter(preferred_foot == "Left") %>%
+  count(position_category)
+
+# count all players by position
+total_distribution <- data %>%
+  count(position_category)
+
+# calculate proportions
+left_footed_proportion <- left_footed_distribution %>%
+  left_join(total_distribution, by = "position_category") %>%
+  mutate(percentage = (n.x / n.y) * 100)
+
+print(left_footed_proportion)
+
+# plot
+ggplot(left_footed_proportion, aes(x = position_category, y = percentage, fill = position_category)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Proportion of Left-Footed Players by Position",
+       x = "Position Category",
+       y = "Percentage of Left-Footed Players") +
+  theme_minimal()
+
+
+# compare market values of left-footed vs. right-footed players
+ggplot(data, aes(x = preferred_foot, y = value_eur, fill = preferred_foot)) +
+  geom_boxplot() +
+  labs(title = "Market Value of Left vs. Right Footed Players",
+       x = "Preferred Foot",
+       y = "Market Value (EUR)") +
+  theme_minimal()
+
+# compare wages
+ggplot(data, aes(x = preferred_foot, y = wage_eur, fill = preferred_foot)) +
+  geom_boxplot() +
+  labs(title = "Wages of Left vs. Right Footed Players",
+       x = "Preferred Foot",
+       y = "Wages (EUR)") +
+  theme_minimal()
+
+
+# filter young players (< 25 y)
+young_players <-data %>%
+  filter(age < 25)
+
+# compare potential
+ggplot(young_players, aes(x = preferred_foot, y = potential, fill = preferred_foot)) +
+  geom_boxplot() +
+  labs(title = "Potential Ratings of Young Left vs. Right Footed Players",
+       x = "Preferred Foot",
+       y = "Potential Rating") +
+  theme_minimal()
+  
+  
+# chi-square test, are left-footed players more common in offense?
+left_vs_right_table <- table(data$preferred_foot, data$position_category)
+chisq.test(left_vs_right_table)
+
+# t-test: compare market values
+t.test(value_eur ~ preferred_foot, data = data)
+
+# T-test: Compare potential ratings of young players
+t.test(potential ~ preferred_foot, data = young_players)
