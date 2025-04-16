@@ -11,8 +11,9 @@
 
 <meta name="author" content="xkokin" />
 
+<meta name="date" content="2025-02-23" />
 
-<title>Labak 1.1</title>
+<title>1_1</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -1747,182 +1748,696 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">Labak 1.1</h1>
+<h1 class="title toc-ignore">1_1</h1>
 <h4 class="author">xkokin</h4>
+<h4 class="date">2025-02-23</h4>
 
 </div>
 
 
 <!-- rnb-text-begin -->
-<p>library(tidyverse)</p>
-<div id="load-data" class="section level1">
-<h1>load data</h1>
-<p>players &lt;- read.csv(“./players_22.csv”)</p>
-<p>glimpse(players)</p>
-</div>
-<div id="task-2" class="section level1">
-<h1>task 2</h1>
-</div>
-<div id="rows-and-colomns" class="section level1">
-<h1>rows and colomns</h1>
-<p>n_rows &lt;- nrow(players) n_cols &lt;- ncol(players)</p>
-<p>c_names &lt;- colnames(players) c_names</p>
-<p>is_labeled &lt;- !is.null(c_names) print(paste(“is labeled:”,
-is_labeled))</p>
-</div>
-<div id="sapply-applies-selected-function-to-each-element-in-this-case---to-each-column-in-players" class="section level1">
-<h1>sapply applies selected function to each element, in this case - to
-each column in players</h1>
-<p>columns_types &lt;- sapply(players, class) is_homogeneous &lt;-
-length(unique(columns_types)) == 1 print(paste(“is homogeneous:”,
-is_homogeneous))</p>
-</div>
-<div id="task-3" class="section level1">
-<h1>task 3</h1>
-</div>
-<div id="is-a-pipe-operator-pass-output-from-one-function-to-another" class="section level1">
-<h1>%&gt;% is a pipe operator, pass output from one function to
-another</h1>
-<p>col_type_counts &lt;- sapply(players, class) %&gt;% table()
-print(col_type_counts)</p>
-</div>
-<div id="task-4" class="section level1">
-<h1>task 4</h1>
-</div>
-<div id="complete.cases-checks-if-column-has-a-na-sum-then-counts-up-how-many-columns-with-na-there-are" class="section level1">
-<h1>complete.cases checks if column has a NA, sum then counts up how
-many columns with NA there are</h1>
-<p>num_complete_records &lt;- sum(complete.cases(players))
-num_complete_records</p>
-</div>
-<div id="task-5" class="section level1">
-<h1>task 5</h1>
-<p>num_duplicate_rows &lt;- sum(duplicated(players))</p>
-</div>
-<div id="check-for-duplicate-columns" class="section level1">
-<h1>Check for duplicate columns</h1>
-</div>
-<div id="t-is-a-transpose-function-swaps-rows-and-cols" class="section level1">
-<h1>t is a transpose function, swaps rows and cols</h1>
-<p>num_duplicate_cols &lt;- sum(duplicated(t(players)))</p>
-</div>
-<div id="show-output-in-a-list-format" class="section level1">
-<h1>show output in a list format</h1>
-<p>list(num_duplicate_rows = num_duplicate_rows, num_duplicate_cols =
-num_duplicate_cols)</p>
-</div>
-<div id="task-6" class="section level1">
-<h1>task 6</h1>
-</div>
-<div id="select-only-numeric-columns" class="section level1">
-<h1>select only numeric columns</h1>
-<p>numeric_data &lt;- players[, sapply(players, is.numeric)]</p>
-</div>
-<div id="get-the-min-and-max-for-each-numeric-column" class="section level1">
-<h1>get the min and max for each numeric column</h1>
-<p>numeric_ranges &lt;- data.frame( min = sapply(numeric_data, min,
-na.rm = TRUE), max = sapply(numeric_data, max, na.rm = TRUE) )</p>
-<p>print(numeric_ranges)</p>
-</div>
-<div id="select-only-character-categorical-columns" class="section level1">
-<h1>select only character (categorical) columns</h1>
-<p>categorical_data &lt;- players[, sapply(players, is.character)]</p>
-</div>
-<div id="count-unique-values-in-each-categorical-column" class="section level1">
-<h1>count unique values in each categorical column</h1>
-<p>categorical_values &lt;- sapply(categorical_data, function(col)
-length(unique(col)))</p>
-</div>
-<div id="convert-to-dataframe-for-better-readability" class="section level1">
-<h1>convert to dataframe for better readability</h1>
-<p>categorical_values &lt;- data.frame(column =
-names(categorical_values), unique_count = categorical_values)</p>
-<p>print(categorical_values)</p>
-<p>list(numeric_ranges = numeric_ranges, categorical_values =
-categorical_values)</p>
-</div>
-<div id="task-7" class="section level1">
-<h1>task 7</h1>
-<p>glimpse(players) # first few columns likely contain player
-identification # latter columns contain performance metrics # some
-columns may be redundant (like player_id appearing multiple times) #
-could be re-arranged by placing key identifiers first, then by
-performance metrics</p>
-</div>
-<div id="tsk8" class="section level1">
-<h1>tsk8</h1>
-<p>best_player &lt;- players[which.max(players$overall),] # find based
-on player’s overall best_player[c(“short_name”, “club_name”, “overall”,
-“wage_eur”, “player_positions”)]</p>
-</div>
-<div id="task-9" class="section level1">
-<h1>task 9</h1>
-</div>
-<div id="get-top-100-players-by-overall" class="section level1">
-<h1>get top 100 players by overall</h1>
-<p>top_100 &lt;- players %&gt;% arrange(desc(overall)) %&gt;%
-head(100)</p>
-</div>
-<div id="ccount-left--and-right-footed-players-in-the-top-100" class="section level1">
-<h1>cCount left- and right-footed players in the top 100</h1>
-<p>left_right_footed &lt;- top_100 %&gt;% count(preferred_foot )</p>
-</div>
-<div id="add-proportion-column" class="section level1">
-<h1>add proportion column</h1>
-</div>
-<div id="n-is-property-created-by-count" class="section level1">
-<h1>n is property created by count</h1>
-<p>left_right_footed &lt;- left_right_footed %&gt;% mutate(proportion =
-n / sum(n))</p>
-<p>left_right_footed</p>
-<p>unique(players$preferred_foot)</p>
-</div>
-<div id="task-10" class="section level1">
-<h1>task 10</h1>
-</div>
-<div id="average-overall-rating-for-left--and-right-footed-players" class="section level1">
-<h1>average overall rating for left- and right-footed players</h1>
-<p>left_vs_right_avg &lt;- players %&gt;% group_by(preferred_foot)
-%&gt;% summarise(avg_overall = mean(overall))</p>
-<p>left_vs_right_avg</p>
-</div>
-<div id="task-11" class="section level1">
-<h1>task 11</h1>
-<p>youngest_left &lt;- players %&gt;% filter(preferred_foot == “Left”
-&amp; overall &gt; 80) %&gt;% arrange(age) %&gt;% slice(1)</p>
-<p>youngest_left[c(“short_name”, “age”, “overall”)]</p>
-</div>
-<div id="task-12" class="section level1">
-<h1>task 12</h1>
-<p>top_potential_left &lt;- players %&gt;% filter(preferred_foot ==
-“Left”, age &lt; 35) %&gt;% arrange(desc(potential)) %&gt;% head(5)</p>
-<p>top_potential_left[c(“short_name”, “age”, “overall”, “potential”,
-“value_eur”)]</p>
-</div>
-<div id="task-13" class="section level1">
-<h1>task 13</h1>
-</div>
-<div id="best-left-footed-dribbler" class="section level1">
-<h1>best left-footed dribbler</h1>
-<p>best_dribbler &lt;- players %&gt;% filter(preferred_foot == “Left”)
-%&gt;% arrange(desc(dribbling)) %&gt;% slice(1)</p>
-<p>best_dribbler[c(“short_name”, “age”, “dribbling”)]</p>
-</div>
-<div id="number-of-left-footed-players-with-shooting-85" class="section level1">
-<h1>number of left-footed players with shooting ≥ 85</h1>
-<p>left_high_shooters &lt;- players %&gt;% filter(preferred_foot ==
-“Left”, shooting &gt;= 85) %&gt;% count()</p>
-<p>left_high_shooters</p>
-</div>
-<div id="best-left-footed-free-kick-taker" class="section level1">
-<h1>best left-footed free kick taker</h1>
-<p>best_freekick_taker &lt;- players %&gt;% filter(preferred_foot ==
-“Left”) %&gt;% arrange(desc(skill_fk_accuracy)) %&gt;% slice(1)</p>
-<p>best_freekick_taker[c(“short_name”, “skill_fk_accuracy”)]</p>
 <!-- rnb-text-end -->
+<!-- rnb-text-begin -->
+<div id="load-data" class="section level2">
+<h2>Load Data</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGxheWVycyA8LSByZWFkLmNzdihcIi4vcGxheWVyc18yMi5jc3ZcIilcbmdsaW1wc2UocGxheWVycylcbmBgYCJ9 -->
+<pre class="r"><code>players &lt;- read.csv(&quot;./players_22.csv&quot;)
+glimpse(players)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiUm93czogMTksMjM5XG5Db2x1bW5zOiAxMTBcbiQgc29maWZhX2lkICAgICAgICAgICAgICAgICAgIDxpbnQ+IDE1ODAyMywgMTg4NTQ1LCAyMDgwMSwgMTkwODcxLCAxOTI5ODUsIDIwMDM4OSwgMjMxNzQ3LCAxNjc0OeKAplxuJCBwbGF5ZXJfdXJsICAgICAgICAgICAgICAgICAgPGNocj4gXCJodHRwczovL3NvZmlmYS5jb20vcGxheWVyLzE1ODAyMy9saW9uZWwtbWVzc2kvMjIwMDAyXCIsIFwiaHR04oCmXG4kIHNob3J0X25hbWUgICAgICAgICAgICAgICAgICA8Y2hyPiBcIkwuIE1lc3NpXCIsIFwiUi4gTGV3YW5kb3dza2lcIiwgXCJDcmlzdGlhbm8gUm9uYWxkb1wiLCBcIk5leW1hciBK4oCmXG4kIGxvbmdfbmFtZSAgICAgICAgICAgICAgICAgICA8Y2hyPiBcIkxpb25lbCBBbmRyw6lzIE1lc3NpIEN1Y2NpdHRpbmlcIiwgXCJSb2JlcnQgTGV3YW5kb3dza2lcIiwgXCJDcmnigKZcbiQgcGxheWVyX3Bvc2l0aW9ucyAgICAgICAgICAgIDxjaHI+IFwiUlcsIFNULCBDRlwiLCBcIlNUXCIsIFwiU1QsIExXXCIsIFwiTFcsIENBTVwiLCBcIkNNLCBDQU1cIiwgXCJHS1wiLCBcIlPigKZcbiQgb3ZlcmFsbCAgICAgICAgICAgICAgICAgICAgIDxpbnQ+IDkzLCA5MiwgOTEsIDkxLCA5MSwgOTEsIDkxLCA5MCwgOTAsIDkwLCA5MCwgODksIDg5LCA4OSwgODksIOKAplxuJCBwb3RlbnRpYWwgICAgICAgICAgICAgICAgICAgPGludD4gOTMsIDkyLCA5MSwgOTEsIDkxLCA5MywgOTUsIDkwLCA5MiwgOTAsIDkwLCA4OSwgOTEsIDg5LCA4OSwg4oCmXG4kIHZhbHVlX2V1ciAgICAgICAgICAgICAgICAgICA8ZGJsPiA3ODAwMDAwMCwgMTE5NTAwMDAwLCA0NTAwMDAwMCwgMTI5MDAwMDAwLCAxMjU1MDAwMDAsIDExMjAwMDDigKZcbiQgd2FnZV9ldXIgICAgICAgICAgICAgICAgICAgIDxkYmw+IDMyMDAwMCwgMjcwMDAwLCAyNzAwMDAsIDI3MDAwMCwgMzUwMDAwLCAxMzAwMDAsIDIzMDAwMCwgODYwMOKAplxuJCBhZ2UgICAgICAgICAgICAgICAgICAgICAgICAgPGludD4gMzQsIDMyLCAzNiwgMjksIDMwLCAyOCwgMjIsIDM1LCAyOSwgMjcsIDMwLCAzMywgMjksIDI4LCAyOSwg4oCmXG4kIGRvYiAgICAgICAgICAgICAgICAgICAgICAgICA8Y2hyPiBcIjE5ODctMDYtMjRcIiwgXCIxOTg4LTA4LTIxXCIsIFwiMTk4NS0wMi0wNVwiLCBcIjE5OTItMDItMDVcIiwgXCIxOTnigKZcbiQgaGVpZ2h0X2NtICAgICAgICAgICAgICAgICAgIDxpbnQ+IDE3MCwgMTg1LCAxODcsIDE3NSwgMTgxLCAxODgsIDE4MiwgMTkzLCAxODcsIDE4OCwgMTY4LCAxODUsIOKAplxuJCB3ZWlnaHRfa2cgICAgICAgICAgICAgICAgICAgPGludD4gNzIsIDgxLCA4MywgNjgsIDcwLCA4NywgNzMsIDkzLCA4NSwgODksIDcwLCA4MSwgOTYsIDc4LCA4NCwg4oCmXG4kIGNsdWJfdGVhbV9pZCAgICAgICAgICAgICAgICA8ZGJsPiA3MywgMjEsIDExLCA3MywgMTAsIDI0MCwgNzMsIDIxLCAyNDEsIDE4LCA1LCAyNDMsIDI0MywgMTgsIDLigKZcbiQgY2x1Yl9uYW1lICAgICAgICAgICAgICAgICAgIDxjaHI+IFwiUGFyaXMgU2FpbnQtR2VybWFpblwiLCBcIkZDIEJheWVybiBNw7xuY2hlblwiLCBcIk1hbmNoZXN0ZXIgVW5pdOKAplxuJCBsZWFndWVfbmFtZSAgICAgICAgICAgICAgICAgPGNocj4gXCJGcmVuY2ggTGlndWUgMVwiLCBcIkdlcm1hbiAxLiBCdW5kZXNsaWdhXCIsIFwiRW5nbGlzaCBQcmVtaWVyIEzigKZcbiQgbGVhZ3VlX2xldmVsICAgICAgICAgICAgICAgIDxpbnQ+IDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIOKAplxuJCBjbHViX3Bvc2l0aW9uICAgICAgICAgICAgICAgPGNocj4gXCJSV1wiLCBcIlNUXCIsIFwiU1RcIiwgXCJMV1wiLCBcIlJDTVwiLCBcIkdLXCIsIFwiU1RcIiwgXCJHS1wiLCBcIkdLXCIsIFwiU1RcIizigKZcbiQgY2x1Yl9qZXJzZXlfbnVtYmVyICAgICAgICAgIDxpbnQ+IDMwLCA5LCA3LCAxMCwgMTcsIDEzLCA3LCAxLCAxLCAxMCwgNywgOSwgMSwgNywgMTQsIDQsIDEwLCAxMeKAplxuJCBjbHViX2xvYW5lZF9mcm9tICAgICAgICAgICAgPGNocj4gXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwg4oCmXG4kIGNsdWJfam9pbmVkICAgICAgICAgICAgICAgICA8Y2hyPiBcIjIwMjEtMDgtMTBcIiwgXCIyMDE0LTA3LTAxXCIsIFwiMjAyMS0wOC0yN1wiLCBcIjIwMTctMDgtMDNcIiwgXCIyMDHigKZcbiQgY2x1Yl9jb250cmFjdF92YWxpZF91bnRpbCAgIDxpbnQ+IDIwMjMsIDIwMjMsIDIwMjMsIDIwMjUsIDIwMjUsIDIwMjMsIDIwMjIsIDIwMjMsIDIwMjUsIDIwMjQsIOKAplxuJCBuYXRpb25hbGl0eV9pZCAgICAgICAgICAgICAgPGludD4gNTIsIDM3LCAzOCwgNTQsIDcsIDQ0LCAxOCwgMjEsIDIxLCAxNCwgMTgsIDE4LCA3LCAxNjcsIDU0LCAz4oCmXG4kIG5hdGlvbmFsaXR5X25hbWUgICAgICAgICAgICA8Y2hyPiBcIkFyZ2VudGluYVwiLCBcIlBvbGFuZFwiLCBcIlBvcnR1Z2FsXCIsIFwiQnJhemlsXCIsIFwiQmVsZ2l1bVwiLCBcIlNsb+KAplxuJCBuYXRpb25fdGVhbV9pZCAgICAgICAgICAgICAgPGRibD4gMTM2OSwgMTM1MywgMTM1NCwgTkEsIDEzMjUsIE5BLCAxMzM1LCAxMzM3LCBOQSwgMTMxOCwgMTMzNSwg4oCmXG4kIG5hdGlvbl9wb3NpdGlvbiAgICAgICAgICAgICA8Y2hyPiBcIlJXXCIsIFwiUlNcIiwgXCJTVFwiLCBcIlwiLCBcIlJDTVwiLCBcIlwiLCBcIkxXXCIsIFwiR0tcIiwgXCJcIiwgXCJTVFwiLCBcIkNETVwi4oCmXG4kIG5hdGlvbl9qZXJzZXlfbnVtYmVyICAgICAgICA8aW50PiAxMCwgOSwgNywgTkEsIDcsIE5BLCAxMCwgMSwgTkEsIDksIDEzLCAxOSwgMSwgTkEsIE5BLCA0LCBOQSzigKZcbiQgcHJlZmVycmVkX2Zvb3QgICAgICAgICAgICAgIDxjaHI+IFwiTGVmdFwiLCBcIlJpZ2h0XCIsIFwiUmlnaHRcIiwgXCJSaWdodFwiLCBcIlJpZ2h0XCIsIFwiUmlnaHRcIiwgXCJSaWdodFwi4oCmXG4kIHdlYWtfZm9vdCAgICAgICAgICAgICAgICAgICA8aW50PiA0LCA0LCA0LCA1LCA1LCAzLCA0LCA0LCA0LCA1LCAzLCA0LCAzLCA1LCAzLCAzLCA0LCAzLCAzLCA0LCDigKZcbiQgc2tpbGxfbW92ZXMgICAgICAgICAgICAgICAgIDxpbnQ+IDQsIDQsIDUsIDUsIDQsIDEsIDUsIDEsIDEsIDMsIDIsIDQsIDEsIDQsIDIsIDIsIDQsIDQsIDEsIDMsIOKAplxuJCBpbnRlcm5hdGlvbmFsX3JlcHV0YXRpb24gICAgPGludD4gNSwgNSwgNSwgNSwgNCwgNSwgNCwgNSwgNCwgNCwgNCwgNCwgNCwgNCwgMywgNCwgNCwgNCwgMywgNCwg4oCmXG4kIHdvcmtfcmF0ZSAgICAgICAgICAgICAgICAgICA8Y2hyPiBcIk1lZGl1bS9Mb3dcIiwgXCJIaWdoL01lZGl1bVwiLCBcIkhpZ2gvTG93XCIsIFwiSGlnaC9NZWRpdW1cIiwgXCJIaWfigKZcbiQgYm9keV90eXBlICAgICAgICAgICAgICAgICAgIDxjaHI+IFwiVW5pcXVlXCIsIFwiVW5pcXVlXCIsIFwiVW5pcXVlXCIsIFwiVW5pcXVlXCIsIFwiVW5pcXVlXCIsIFwiVW5pcXVlXCIsIOKAplxuJCByZWFsX2ZhY2UgICAgICAgICAgICAgICAgICAgPGNocj4gXCJZZXNcIiwgXCJZZXNcIiwgXCJZZXNcIiwgXCJZZXNcIiwgXCJZZXNcIiwgXCJZZXNcIiwgXCJZZXNcIiwgXCJZZXNcIiwgXCJZZXPigKZcbiQgcmVsZWFzZV9jbGF1c2VfZXVyICAgICAgICAgIDxpbnQ+IDE0NDMwMDAwMCwgMTk3MjAwMDAwLCA4MzMwMDAwMCwgMjM4NzAwMDAwLCAyMzIyMDAwMDAsIDIzODAwMOKAplxuJCBwbGF5ZXJfdGFncyAgICAgICAgICAgICAgICAgPGNocj4gXCIjRHJpYmJsZXIsICNEaXN0YW5jZSBTaG9vdGVyLCAjRksgU3BlY2lhbGlzdCwgI0Fjcm9iYXQsICNDbOKAplxuJCBwbGF5ZXJfdHJhaXRzICAgICAgICAgICAgICAgPGNocj4gXCJGaW5lc3NlIFNob3QsIExvbmcgU2hvdCBUYWtlciAoQUkpLCBQbGF5bWFrZXIgKEFJKSwgT3V0c2lkZeKAplxuJCBwYWNlICAgICAgICAgICAgICAgICAgICAgICAgPGludD4gODUsIDc4LCA4NywgOTEsIDc2LCBOQSwgOTcsIE5BLCBOQSwgNzAsIDc4LCA3NiwgTkEsIDg4LCA2NSwg4oCmXG4kIHNob290aW5nICAgICAgICAgICAgICAgICAgICA8aW50PiA5MiwgOTIsIDk0LCA4MywgODYsIE5BLCA4OCwgTkEsIE5BLCA5MSwgNjYsIDg2LCBOQSwgODcsIDczLCDigKZcbiQgcGFzc2luZyAgICAgICAgICAgICAgICAgICAgIDxpbnQ+IDkxLCA3OSwgODAsIDg2LCA5MywgTkEsIDgwLCBOQSwgTkEsIDgzLCA3NSwgODEsIE5BLCA4MiwgNzYsIOKAplxuJCBkcmliYmxpbmcgICAgICAgICAgICAgICAgICAgPGludD4gOTUsIDg2LCA4OCwgOTQsIDg4LCBOQSwgOTIsIE5BLCBOQSwgODMsIDgyLCA4NywgTkEsIDg2LCA3Mywg4oCmXG4kIGRlZmVuZGluZyAgICAgICAgICAgICAgICAgICA8aW50PiAzNCwgNDQsIDM0LCAzNywgNjQsIE5BLCAzNiwgTkEsIE5BLCA0NywgODcsIDM5LCBOQSwgNDMsIDg2LCDigKZcbiQgcGh5c2ljICAgICAgICAgICAgICAgICAgICAgIDxpbnQ+IDY1LCA4MiwgNzUsIDYzLCA3OCwgTkEsIDc3LCBOQSwgTkEsIDgzLCA4MywgNzcsIE5BLCA2OSwgOTAsIOKAplxuJCBhdHRhY2tpbmdfY3Jvc3NpbmcgICAgICAgICAgPGludD4gODUsIDcxLCA4NywgODUsIDk0LCAxMywgNzgsIDE1LCAxOCwgODAsIDY4LCA3NSwgMTQsIDgzLCA1OCwg4oCmXG4kIGF0dGFja2luZ19maW5pc2hpbmcgICAgICAgICA8aW50PiA5NSwgOTUsIDk1LCA4MywgODIsIDExLCA5MywgMTMsIDE0LCA5NCwgNjUsIDkwLCAxNCwgODgsIDY0LCDigKZcbiQgYXR0YWNraW5nX2hlYWRpbmdfYWNjdXJhY3kgIDxpbnQ+IDcwLCA5MCwgOTAsIDYzLCA1NSwgMTUsIDcyLCAyNSwgMTEsIDg2LCA1NCwgODksIDEzLCA2OCwgNzksIOKAplxuJCBhdHRhY2tpbmdfc2hvcnRfcGFzc2luZyAgICAgPGludD4gOTEsIDg1LCA4MCwgODYsIDk0LCA0MywgODUsIDYwLCA2MSwgODUsIDgyLCA4NiwgMzMsIDg0LCA4NCwg4oCmXG4kIGF0dGFja2luZ192b2xsZXlzICAgICAgICAgICA8aW50PiA4OCwgODksIDg2LCA4NiwgODIsIDEzLCA4MywgMTEsIDE0LCA4OCwgNTYsIDg2LCAxMiwgNzgsIDYyLCDigKZcbiQgc2tpbGxfZHJpYmJsaW5nICAgICAgICAgICAgIDxpbnQ+IDk2LCA4NSwgODgsIDk1LCA4OCwgMTIsIDkzLCAzMCwgMjEsIDgzLCA3OSwgODcsIDEzLCA4NywgNjksIOKAplxuJCBza2lsbF9jdXJ2ZSAgICAgICAgICAgICAgICAgPGludD4gOTMsIDc5LCA4MSwgODgsIDg1LCAxMywgODAsIDE0LCAxOCwgODMsIDQ5LCA4MSwgMTksIDg1LCA2Miwg4oCmXG4kIHNraWxsX2ZrX2FjY3VyYWN5ICAgICAgICAgICA8aW50PiA5NCwgODUsIDg0LCA4NywgODMsIDE0LCA2OSwgMTEsIDEyLCA2NSwgNDksIDczLCAyMCwgNzQsIDc0LCDigKZcbiQgc2tpbGxfbG9uZ19wYXNzaW5nICAgICAgICAgIDxpbnQ+IDkxLCA3MCwgNzcsIDgxLCA5MywgNDAsIDcxLCA2OCwgNjMsIDg2LCA3OSwgNzMsIDM1LCA3NCwgODQsIOKAplxuJCBza2lsbF9iYWxsX2NvbnRyb2wgICAgICAgICAgPGludD4gOTYsIDg4LCA4OCwgOTUsIDkxLCAzMCwgOTEsIDQ2LCAzMCwgODUsIDgxLCA5MCwgMjMsIDg0LCA3OSwg4oCmXG4kIG1vdmVtZW50X2FjY2VsZXJhdGlvbiAgICAgICA8aW50PiA5MSwgNzcsIDg1LCA5MywgNzYsIDQzLCA5NywgNTQsIDM4LCA2NSwgODIsIDc3LCA0MiwgODUsIDYwLCDigKZcbiQgbW92ZW1lbnRfc3ByaW50X3NwZWVkICAgICAgIDxpbnQ+IDgwLCA3OSwgODgsIDg5LCA3NiwgNjAsIDk3LCA2MCwgNTAsIDc0LCA3NSwgNzUsIDUyLCA5MCwgNjksIOKAplxuJCBtb3ZlbWVudF9hZ2lsaXR5ICAgICAgICAgICAgPGludD4gOTEsIDc3LCA4NiwgOTYsIDc5LCA2NywgOTIsIDUxLCAzOSwgNzEsIDgyLCA3OSwgNjIsIDg2LCA2MSwg4oCmXG4kIG1vdmVtZW50X3JlYWN0aW9ucyAgICAgICAgICA8aW50PiA5NCwgOTMsIDk0LCA4OSwgOTEsIDg4LCA5MywgODcsIDg2LCA5MiwgOTMsIDkxLCA4NCwgOTEsIDg3LCDigKZcbiQgbW92ZW1lbnRfYmFsYW5jZSAgICAgICAgICAgIDxpbnQ+IDk1LCA4MiwgNzQsIDg0LCA3OCwgNDksIDgzLCAzNSwgNDMsIDcwLCA5MiwgNzIsIDQ1LCA3OCwgNjYsIOKAplxuJCBwb3dlcl9zaG90X3Bvd2VyICAgICAgICAgICAgPGludD4gODYsIDkwLCA5NCwgODAsIDkxLCA1OSwgODYsIDY4LCA2NiwgOTEsIDcxLCA4NSwgNTYsIDg4LCA4OCwg4oCmXG4kIHBvd2VyX2p1bXBpbmcgICAgICAgICAgICAgICA8aW50PiA2OCwgODUsIDk1LCA2NCwgNjMsIDc4LCA3OCwgNzcsIDc5LCA3OSwgNzcsIDc5LCA2OCwgNjAsIDg3LCDigKZcbiQgcG93ZXJfc3RhbWluYSAgICAgICAgICAgICAgIDxpbnQ+IDcyLCA3NiwgNzcsIDgxLCA4OSwgNDEsIDg4LCA0MywgMzUsIDgzLCA5NywgNzgsIDM4LCA4OCwgODksIOKAplxuJCBwb3dlcl9zdHJlbmd0aCAgICAgICAgICAgICAgPGludD4gNjksIDg2LCA3NywgNTMsIDc0LCA3OCwgNzcsIDgwLCA3OCwgODUsIDcyLCA4MiwgNzAsIDY0LCA5MCwg4oCmXG4kIHBvd2VyX2xvbmdfc2hvdHMgICAgICAgICAgICA8aW50PiA5NCwgODcsIDkzLCA4MSwgOTEsIDEyLCA4MiwgMTYsIDEwLCA4NiwgNjUsIDc5LCAxNywgODksIDgxLCDigKZcbiQgbWVudGFsaXR5X2FnZ3Jlc3Npb24gICAgICAgIDxpbnQ+IDQ0LCA4MSwgNjMsIDYzLCA3NiwgMzQsIDYyLCAyOSwgNDMsIDgwLCA5MywgNjMsIDIzLCA2MiwgOTEsIOKAplxuJCBtZW50YWxpdHlfaW50ZXJjZXB0aW9ucyAgICAgPGludD4gNDAsIDQ5LCAyOSwgMzcsIDY2LCAxOSwgMzgsIDMwLCAyMiwgNDQsIDkxLCAzOSwgMTUsIDM5LCA4Nywg4oCmXG4kIG1lbnRhbGl0eV9wb3NpdGlvbmluZyAgICAgICA8aW50PiA5MywgOTUsIDk1LCA4NiwgODgsIDExLCA5MiwgMTIsIDExLCA5NCwgNzIsIDkwLCAxMywgOTEsIDc1LCDigKZcbiQgbWVudGFsaXR5X3Zpc2lvbiAgICAgICAgICAgIDxpbnQ+IDk1LCA4MSwgNzYsIDkwLCA5NCwgNjUsIDgyLCA3MCwgNzAsIDg3LCA3OCwgODcsIDQ0LCA4MywgODAsIOKAplxuJCBtZW50YWxpdHlfcGVuYWx0aWVzICAgICAgICAgPGludD4gNzUsIDkwLCA4OCwgOTMsIDgzLCAxMSwgNzksIDQ3LCAyNSwgOTEsIDU0LCA4NCwgMjcsIDczLCA2Niwg4oCmXG4kIG1lbnRhbGl0eV9jb21wb3N1cmUgICAgICAgICA8aW50PiA5NiwgODgsIDk1LCA5MywgODksIDY4LCA4OCwgNzAsIDcwLCA5MSwgODQsIDkwLCA2NiwgODksIDg0LCDigKZcbiQgZGVmZW5kaW5nX21hcmtpbmdfYXdhcmVuZXNzIDxpbnQ+IDIwLCAzNSwgMjQsIDM1LCA2OCwgMjcsIDI2LCAxNywgMjUsIDUwLCA5MCwgNDMsIDIwLCA1MCwgODUsIOKAplxuJCBkZWZlbmRpbmdfc3RhbmRpbmdfdGFja2xlICAgPGludD4gMzUsIDQyLCAzMiwgMzIsIDY1LCAxMiwgMzQsIDEwLCAxMywgMzYsIDkzLCAyNCwgMTgsIDM0LCA4OCwg4oCmXG4kIGRlZmVuZGluZ19zbGlkaW5nX3RhY2tsZSAgICA8aW50PiAyNCwgMTksIDI0LCAyOSwgNTMsIDE4LCAzMiwgMTEsIDEwLCAzOCwgODYsIDE4LCAxNiwgMzMsIDg3LCDigKZcbiQgZ29hbGtlZXBpbmdfZGl2aW5nICAgICAgICAgIDxpbnQ+IDYsIDE1LCA3LCA5LCAxNSwgODcsIDEzLCA4OCwgODgsIDgsIDE1LCAxMywgODQsIDExLCAxMywgMTMsIOKAplxuJCBnb2Fsa2VlcGluZ19oYW5kbGluZyAgICAgICAgPGludD4gMTEsIDYsIDExLCA5LCAxMywgOTIsIDUsIDg4LCA4NSwgMTAsIDEyLCAxMSwgODksIDEzLCAxNCwgMTAs4oCmXG4kIGdvYWxrZWVwaW5nX2tpY2tpbmcgICAgICAgICA8aW50PiAxNSwgMTIsIDE1LCAxNSwgNSwgNzgsIDcsIDkxLCA4OCwgMTEsIDEwLCA1LCA3NCwgMTMsIDE2LCAxMyzigKZcbiQgZ29hbGtlZXBpbmdfcG9zaXRpb25pbmcgICAgIDxpbnQ+IDE0LCA4LCAxNCwgMTUsIDEwLCA5MCwgMTEsIDg5LCA4OCwgMTQsIDcsIDUsIDg2LCA2LCAxMiwgMTEsIOKAplxuJCBnb2Fsa2VlcGluZ19yZWZsZXhlcyAgICAgICAgPGludD4gOCwgMTAsIDExLCAxMSwgMTMsIDkwLCA2LCA4OCwgOTAsIDExLCAxMCwgNywgODgsIDEwLCAxMiwgMTEs4oCmXG4kIGdvYWxrZWVwaW5nX3NwZWVkICAgICAgICAgICA8aW50PiBOQSwgTkEsIE5BLCBOQSwgTkEsIDUwLCBOQSwgNTYsIDQzLCBOQSwgTkEsIE5BLCA0NiwgTkEsIE5BLCDigKZcbiQgbHMgICAgICAgICAgICAgICAgICAgICAgICAgIDxjaHI+IFwiODkrM1wiLCBcIjkwKzJcIiwgXCI5MCsxXCIsIFwiODMrM1wiLCBcIjgzKzNcIiwgXCIzMyszXCIsIFwiODkrM1wiLCBcIjQwK+KAplxuJCBzdCAgICAgICAgICAgICAgICAgICAgICAgICAgPGNocj4gXCI4OSszXCIsIFwiOTArMlwiLCBcIjkwKzFcIiwgXCI4MyszXCIsIFwiODMrM1wiLCBcIjMzKzNcIiwgXCI4OSszXCIsIFwiNDAr4oCmXG4kIHJzICAgICAgICAgICAgICAgICAgICAgICAgICA8Y2hyPiBcIjg5KzNcIiwgXCI5MCsyXCIsIFwiOTArMVwiLCBcIjgzKzNcIiwgXCI4MyszXCIsIFwiMzMrM1wiLCBcIjg5KzNcIiwgXCI0MCvigKZcbiQgbHcgICAgICAgICAgICAgICAgICAgICAgICAgIDxjaHI+IFwiOTJcIiwgXCI4NVwiLCBcIjg4XCIsIFwiOTBcIiwgXCI4OFwiLCBcIjMyXCIsIFwiOTBcIiwgXCI0MFwiLCBcIjM1XCIsIFwiODRcIiwg4oCmXG4kIGxmICAgICAgICAgICAgICAgICAgICAgICAgICA8Y2hyPiBcIjkzXCIsIFwiODhcIiwgXCI4OVwiLCBcIjg4XCIsIFwiODdcIiwgXCIzNVwiLCBcIjkwXCIsIFwiNDNcIiwgXCIzOFwiLCBcIjg2XCIsIOKAplxuJCBjZiAgICAgICAgICAgICAgICAgICAgICAgICAgPGNocj4gXCI5M1wiLCBcIjg4XCIsIFwiODlcIiwgXCI4OFwiLCBcIjg3XCIsIFwiMzVcIiwgXCI5MFwiLCBcIjQzXCIsIFwiMzhcIiwgXCI4NlwiLCDigKZcbiQgcmYgICAgICAgICAgICAgICAgICAgICAgICAgIDxjaHI+IFwiOTNcIiwgXCI4OFwiLCBcIjg5XCIsIFwiODhcIiwgXCI4N1wiLCBcIjM1XCIsIFwiOTBcIiwgXCI0M1wiLCBcIjM4XCIsIFwiODZcIiwg4oCmXG4kIHJ3ICAgICAgICAgICAgICAgICAgICAgICAgICA8Y2hyPiBcIjkyXCIsIFwiODVcIiwgXCI4OFwiLCBcIjkwXCIsIFwiODhcIiwgXCIzMlwiLCBcIjkwXCIsIFwiNDBcIiwgXCIzNVwiLCBcIjg0XCIsIOKAplxuJCBsYW0gICAgICAgICAgICAgICAgICAgICAgICAgPGNocj4gXCI5M1wiLCBcIjg2KzNcIiwgXCI4NiszXCIsIFwiODkrMlwiLCBcIjg5KzJcIiwgXCIzOCszXCIsIFwiODkrM1wiLCBcIjQ3KzNcIuKAplxuJCBjYW0gICAgICAgICAgICAgICAgICAgICAgICAgPGNocj4gXCI5M1wiLCBcIjg2KzNcIiwgXCI4NiszXCIsIFwiODkrMlwiLCBcIjg5KzJcIiwgXCIzOCszXCIsIFwiODkrM1wiLCBcIjQ3KzNcIuKAplxuJCByYW0gICAgICAgICAgICAgICAgICAgICAgICAgPGNocj4gXCI5M1wiLCBcIjg2KzNcIiwgXCI4NiszXCIsIFwiODkrMlwiLCBcIjg5KzJcIiwgXCIzOCszXCIsIFwiODkrM1wiLCBcIjQ3KzNcIuKAplxuJCBsbSAgICAgICAgICAgICAgICAgICAgICAgICAgPGNocj4gXCI5MSsyXCIsIFwiODQrM1wiLCBcIjg2KzNcIiwgXCI4OSsyXCIsIFwiODkrMlwiLCBcIjM1KzNcIiwgXCI4OSszXCIsIFwiNDQr4oCmXG4kIGxjbSAgICAgICAgICAgICAgICAgICAgICAgICA8Y2hyPiBcIjg3KzNcIiwgXCI4MCszXCIsIFwiNzgrM1wiLCBcIjgyKzNcIiwgXCI4OSsyXCIsIFwiMzgrM1wiLCBcIjgxKzNcIiwgXCI1MCvigKZcbiQgY20gICAgICAgICAgICAgICAgICAgICAgICAgIDxjaHI+IFwiODcrM1wiLCBcIjgwKzNcIiwgXCI3OCszXCIsIFwiODIrM1wiLCBcIjg5KzJcIiwgXCIzOCszXCIsIFwiODErM1wiLCBcIjUwK+KAplxuJCByY20gICAgICAgICAgICAgICAgICAgICAgICAgPGNocj4gXCI4NyszXCIsIFwiODArM1wiLCBcIjc4KzNcIiwgXCI4MiszXCIsIFwiODkrMlwiLCBcIjM4KzNcIiwgXCI4MSszXCIsIFwiNTAr4oCmXG4kIHJtICAgICAgICAgICAgICAgICAgICAgICAgICA8Y2hyPiBcIjkxKzJcIiwgXCI4NCszXCIsIFwiODYrM1wiLCBcIjg5KzJcIiwgXCI4OSsyXCIsIFwiMzUrM1wiLCBcIjg5KzNcIiwgXCI0NCvigKZcbiQgbHdiICAgICAgICAgICAgICAgICAgICAgICAgIDxjaHI+IFwiNjYrM1wiLCBcIjY0KzNcIiwgXCI2MyszXCIsIFwiNjcrM1wiLCBcIjc5KzNcIiwgXCIzMiszXCIsIFwiNjcrM1wiLCBcIjM3K+KAplxuJCBsZG0gICAgICAgICAgICAgICAgICAgICAgICAgPGNocj4gXCI2NCszXCIsIFwiNjYrM1wiLCBcIjU5KzNcIiwgXCI2MyszXCIsIFwiODArM1wiLCBcIjM2KzNcIiwgXCI2MyszXCIsIFwiNDMr4oCmXG4kIGNkbSAgICAgICAgICAgICAgICAgICAgICAgICA8Y2hyPiBcIjY0KzNcIiwgXCI2NiszXCIsIFwiNTkrM1wiLCBcIjYzKzNcIiwgXCI4MCszXCIsIFwiMzYrM1wiLCBcIjYzKzNcIiwgXCI0MyvigKZcbiQgcmRtICAgICAgICAgICAgICAgICAgICAgICAgIDxjaHI+IFwiNjQrM1wiLCBcIjY2KzNcIiwgXCI1OSszXCIsIFwiNjMrM1wiLCBcIjgwKzNcIiwgXCIzNiszXCIsIFwiNjMrM1wiLCBcIjQzK+KAplxuJCByd2IgICAgICAgICAgICAgICAgICAgICAgICAgPGNocj4gXCI2NiszXCIsIFwiNjQrM1wiLCBcIjYzKzNcIiwgXCI2NyszXCIsIFwiNzkrM1wiLCBcIjMyKzNcIiwgXCI2NyszXCIsIFwiMzcr4oCmXG4kIGxiICAgICAgICAgICAgICAgICAgICAgICAgICA8Y2hyPiBcIjYxKzNcIiwgXCI2MSszXCIsIFwiNjArM1wiLCBcIjYyKzNcIiwgXCI3NSszXCIsIFwiMzIrM1wiLCBcIjYzKzNcIiwgXCIzNSvigKZcbiQgbGNiICAgICAgICAgICAgICAgICAgICAgICAgIDxjaHI+IFwiNTArM1wiLCBcIjYwKzNcIiwgXCI1MyszXCIsIFwiNTArM1wiLCBcIjY5KzNcIiwgXCIzMyszXCIsIFwiNTQrM1wiLCBcIjM0K+KAplxuJCBjYiAgICAgICAgICAgICAgICAgICAgICAgICAgPGNocj4gXCI1MCszXCIsIFwiNjArM1wiLCBcIjUzKzNcIiwgXCI1MCszXCIsIFwiNjkrM1wiLCBcIjMzKzNcIiwgXCI1NCszXCIsIFwiMzQr4oCmXG4kIHJjYiAgICAgICAgICAgICAgICAgICAgICAgICA8Y2hyPiBcIjUwKzNcIiwgXCI2MCszXCIsIFwiNTMrM1wiLCBcIjUwKzNcIiwgXCI2OSszXCIsIFwiMzMrM1wiLCBcIjU0KzNcIiwgXCIzNCvigKZcbiQgcmIgICAgICAgICAgICAgICAgICAgICAgICAgIDxjaHI+IFwiNjErM1wiLCBcIjYxKzNcIiwgXCI2MCszXCIsIFwiNjIrM1wiLCBcIjc1KzNcIiwgXCIzMiszXCIsIFwiNjMrM1wiLCBcIjM1K+KAplxuJCBnayAgICAgICAgICAgICAgICAgICAgICAgICAgPGNocj4gXCIxOSszXCIsIFwiMTkrM1wiLCBcIjIwKzNcIiwgXCIyMCszXCIsIFwiMjErM1wiLCBcIjg5KzNcIiwgXCIxOCszXCIsIFwiODgr4oCmXG4kIHBsYXllcl9mYWNlX3VybCAgICAgICAgICAgICA8Y2hyPiBcImh0dHBzOi8vY2RuLnNvZmlmYS5uZXQvcGxheWVycy8xNTgvMDIzLzIyXzEyMC5wbmdcIiwgXCJodHRwczrigKZcbiQgY2x1Yl9sb2dvX3VybCAgICAgICAgICAgICAgIDxjaHI+IFwiaHR0cHM6Ly9jZG4uc29maWZhLm5ldC90ZWFtcy83My82MC5wbmdcIiwgXCJodHRwczovL2Nkbi5zb2ZpZuKAplxuJCBjbHViX2ZsYWdfdXJsICAgICAgICAgICAgICAgPGNocj4gXCJodHRwczovL2Nkbi5zb2ZpZmEubmV0L2ZsYWdzL2ZyLnBuZ1wiLCBcImh0dHBzOi8vY2RuLnNvZmlmYS5u4oCmXG4kIG5hdGlvbl9sb2dvX3VybCAgICAgICAgICAgICA8Y2hyPiBcImh0dHBzOi8vY2RuLnNvZmlmYS5uZXQvdGVhbXMvMTM2OS82MC5wbmdcIiwgXCJodHRwczovL2Nkbi5zb2bigKZcbiQgbmF0aW9uX2ZsYWdfdXJsICAgICAgICAgICAgIDxjaHI+IFwiaHR0cHM6Ly9jZG4uc29maWZhLm5ldC9mbGFncy9hci5wbmdcIiwgXCJodHRwczovL2Nkbi5zb2ZpZmEubuKAplxuIn0= -->
+<pre><code>Rows: 19,239
+Columns: 110
+$ sofifa_id                   &lt;int&gt; 158023, 188545, 20801, 190871, 192985, 200389, 231747, 16749…
+$ player_url                  &lt;chr&gt; &quot;https://sofifa.com/player/158023/lionel-messi/220002&quot;, &quot;htt…
+$ short_name                  &lt;chr&gt; &quot;L. Messi&quot;, &quot;R. Lewandowski&quot;, &quot;Cristiano Ronaldo&quot;, &quot;Neymar J…
+$ long_name                   &lt;chr&gt; &quot;Lionel Andrés Messi Cuccittini&quot;, &quot;Robert Lewandowski&quot;, &quot;Cri…
+$ player_positions            &lt;chr&gt; &quot;RW, ST, CF&quot;, &quot;ST&quot;, &quot;ST, LW&quot;, &quot;LW, CAM&quot;, &quot;CM, CAM&quot;, &quot;GK&quot;, &quot;S…
+$ overall                     &lt;int&gt; 93, 92, 91, 91, 91, 91, 91, 90, 90, 90, 90, 89, 89, 89, 89, …
+$ potential                   &lt;int&gt; 93, 92, 91, 91, 91, 93, 95, 90, 92, 90, 90, 89, 91, 89, 89, …
+$ value_eur                   &lt;dbl&gt; 78000000, 119500000, 45000000, 129000000, 125500000, 1120000…
+$ wage_eur                    &lt;dbl&gt; 320000, 270000, 270000, 270000, 350000, 130000, 230000, 8600…
+$ age                         &lt;int&gt; 34, 32, 36, 29, 30, 28, 22, 35, 29, 27, 30, 33, 29, 28, 29, …
+$ dob                         &lt;chr&gt; &quot;1987-06-24&quot;, &quot;1988-08-21&quot;, &quot;1985-02-05&quot;, &quot;1992-02-05&quot;, &quot;199…
+$ height_cm                   &lt;int&gt; 170, 185, 187, 175, 181, 188, 182, 193, 187, 188, 168, 185, …
+$ weight_kg                   &lt;int&gt; 72, 81, 83, 68, 70, 87, 73, 93, 85, 89, 70, 81, 96, 78, 84, …
+$ club_team_id                &lt;dbl&gt; 73, 21, 11, 73, 10, 240, 73, 21, 241, 18, 5, 243, 243, 18, 2…
+$ club_name                   &lt;chr&gt; &quot;Paris Saint-Germain&quot;, &quot;FC Bayern München&quot;, &quot;Manchester Unit…
+$ league_name                 &lt;chr&gt; &quot;French Ligue 1&quot;, &quot;German 1. Bundesliga&quot;, &quot;English Premier L…
+$ league_level                &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+$ club_position               &lt;chr&gt; &quot;RW&quot;, &quot;ST&quot;, &quot;ST&quot;, &quot;LW&quot;, &quot;RCM&quot;, &quot;GK&quot;, &quot;ST&quot;, &quot;GK&quot;, &quot;GK&quot;, &quot;ST&quot;,…
+$ club_jersey_number          &lt;int&gt; 30, 9, 7, 10, 17, 13, 7, 1, 1, 10, 7, 9, 1, 7, 14, 4, 10, 11…
+$ club_loaned_from            &lt;chr&gt; &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, …
+$ club_joined                 &lt;chr&gt; &quot;2021-08-10&quot;, &quot;2014-07-01&quot;, &quot;2021-08-27&quot;, &quot;2017-08-03&quot;, &quot;201…
+$ club_contract_valid_until   &lt;int&gt; 2023, 2023, 2023, 2025, 2025, 2023, 2022, 2023, 2025, 2024, …
+$ nationality_id              &lt;int&gt; 52, 37, 38, 54, 7, 44, 18, 21, 21, 14, 18, 18, 7, 167, 54, 3…
+$ nationality_name            &lt;chr&gt; &quot;Argentina&quot;, &quot;Poland&quot;, &quot;Portugal&quot;, &quot;Brazil&quot;, &quot;Belgium&quot;, &quot;Slo…
+$ nation_team_id              &lt;dbl&gt; 1369, 1353, 1354, NA, 1325, NA, 1335, 1337, NA, 1318, 1335, …
+$ nation_position             &lt;chr&gt; &quot;RW&quot;, &quot;RS&quot;, &quot;ST&quot;, &quot;&quot;, &quot;RCM&quot;, &quot;&quot;, &quot;LW&quot;, &quot;GK&quot;, &quot;&quot;, &quot;ST&quot;, &quot;CDM&quot;…
+$ nation_jersey_number        &lt;int&gt; 10, 9, 7, NA, 7, NA, 10, 1, NA, 9, 13, 19, 1, NA, NA, 4, NA,…
+$ preferred_foot              &lt;chr&gt; &quot;Left&quot;, &quot;Right&quot;, &quot;Right&quot;, &quot;Right&quot;, &quot;Right&quot;, &quot;Right&quot;, &quot;Right&quot;…
+$ weak_foot                   &lt;int&gt; 4, 4, 4, 5, 5, 3, 4, 4, 4, 5, 3, 4, 3, 5, 3, 3, 4, 3, 3, 4, …
+$ skill_moves                 &lt;int&gt; 4, 4, 5, 5, 4, 1, 5, 1, 1, 3, 2, 4, 1, 4, 2, 2, 4, 4, 1, 3, …
+$ international_reputation    &lt;int&gt; 5, 5, 5, 5, 4, 5, 4, 5, 4, 4, 4, 4, 4, 4, 3, 4, 4, 4, 3, 4, …
+$ work_rate                   &lt;chr&gt; &quot;Medium/Low&quot;, &quot;High/Medium&quot;, &quot;High/Low&quot;, &quot;High/Medium&quot;, &quot;Hig…
+$ body_type                   &lt;chr&gt; &quot;Unique&quot;, &quot;Unique&quot;, &quot;Unique&quot;, &quot;Unique&quot;, &quot;Unique&quot;, &quot;Unique&quot;, …
+$ real_face                   &lt;chr&gt; &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes…
+$ release_clause_eur          &lt;int&gt; 144300000, 197200000, 83300000, 238700000, 232200000, 238000…
+$ player_tags                 &lt;chr&gt; &quot;#Dribbler, #Distance Shooter, #FK Specialist, #Acrobat, #Cl…
+$ player_traits               &lt;chr&gt; &quot;Finesse Shot, Long Shot Taker (AI), Playmaker (AI), Outside…
+$ pace                        &lt;int&gt; 85, 78, 87, 91, 76, NA, 97, NA, NA, 70, 78, 76, NA, 88, 65, …
+$ shooting                    &lt;int&gt; 92, 92, 94, 83, 86, NA, 88, NA, NA, 91, 66, 86, NA, 87, 73, …
+$ passing                     &lt;int&gt; 91, 79, 80, 86, 93, NA, 80, NA, NA, 83, 75, 81, NA, 82, 76, …
+$ dribbling                   &lt;int&gt; 95, 86, 88, 94, 88, NA, 92, NA, NA, 83, 82, 87, NA, 86, 73, …
+$ defending                   &lt;int&gt; 34, 44, 34, 37, 64, NA, 36, NA, NA, 47, 87, 39, NA, 43, 86, …
+$ physic                      &lt;int&gt; 65, 82, 75, 63, 78, NA, 77, NA, NA, 83, 83, 77, NA, 69, 90, …
+$ attacking_crossing          &lt;int&gt; 85, 71, 87, 85, 94, 13, 78, 15, 18, 80, 68, 75, 14, 83, 58, …
+$ attacking_finishing         &lt;int&gt; 95, 95, 95, 83, 82, 11, 93, 13, 14, 94, 65, 90, 14, 88, 64, …
+$ attacking_heading_accuracy  &lt;int&gt; 70, 90, 90, 63, 55, 15, 72, 25, 11, 86, 54, 89, 13, 68, 79, …
+$ attacking_short_passing     &lt;int&gt; 91, 85, 80, 86, 94, 43, 85, 60, 61, 85, 82, 86, 33, 84, 84, …
+$ attacking_volleys           &lt;int&gt; 88, 89, 86, 86, 82, 13, 83, 11, 14, 88, 56, 86, 12, 78, 62, …
+$ skill_dribbling             &lt;int&gt; 96, 85, 88, 95, 88, 12, 93, 30, 21, 83, 79, 87, 13, 87, 69, …
+$ skill_curve                 &lt;int&gt; 93, 79, 81, 88, 85, 13, 80, 14, 18, 83, 49, 81, 19, 85, 62, …
+$ skill_fk_accuracy           &lt;int&gt; 94, 85, 84, 87, 83, 14, 69, 11, 12, 65, 49, 73, 20, 74, 74, …
+$ skill_long_passing          &lt;int&gt; 91, 70, 77, 81, 93, 40, 71, 68, 63, 86, 79, 73, 35, 74, 84, …
+$ skill_ball_control          &lt;int&gt; 96, 88, 88, 95, 91, 30, 91, 46, 30, 85, 81, 90, 23, 84, 79, …
+$ movement_acceleration       &lt;int&gt; 91, 77, 85, 93, 76, 43, 97, 54, 38, 65, 82, 77, 42, 85, 60, …
+$ movement_sprint_speed       &lt;int&gt; 80, 79, 88, 89, 76, 60, 97, 60, 50, 74, 75, 75, 52, 90, 69, …
+$ movement_agility            &lt;int&gt; 91, 77, 86, 96, 79, 67, 92, 51, 39, 71, 82, 79, 62, 86, 61, …
+$ movement_reactions          &lt;int&gt; 94, 93, 94, 89, 91, 88, 93, 87, 86, 92, 93, 91, 84, 91, 87, …
+$ movement_balance            &lt;int&gt; 95, 82, 74, 84, 78, 49, 83, 35, 43, 70, 92, 72, 45, 78, 66, …
+$ power_shot_power            &lt;int&gt; 86, 90, 94, 80, 91, 59, 86, 68, 66, 91, 71, 85, 56, 88, 88, …
+$ power_jumping               &lt;int&gt; 68, 85, 95, 64, 63, 78, 78, 77, 79, 79, 77, 79, 68, 60, 87, …
+$ power_stamina               &lt;int&gt; 72, 76, 77, 81, 89, 41, 88, 43, 35, 83, 97, 78, 38, 88, 89, …
+$ power_strength              &lt;int&gt; 69, 86, 77, 53, 74, 78, 77, 80, 78, 85, 72, 82, 70, 64, 90, …
+$ power_long_shots            &lt;int&gt; 94, 87, 93, 81, 91, 12, 82, 16, 10, 86, 65, 79, 17, 89, 81, …
+$ mentality_aggression        &lt;int&gt; 44, 81, 63, 63, 76, 34, 62, 29, 43, 80, 93, 63, 23, 62, 91, …
+$ mentality_interceptions     &lt;int&gt; 40, 49, 29, 37, 66, 19, 38, 30, 22, 44, 91, 39, 15, 39, 87, …
+$ mentality_positioning       &lt;int&gt; 93, 95, 95, 86, 88, 11, 92, 12, 11, 94, 72, 90, 13, 91, 75, …
+$ mentality_vision            &lt;int&gt; 95, 81, 76, 90, 94, 65, 82, 70, 70, 87, 78, 87, 44, 83, 80, …
+$ mentality_penalties         &lt;int&gt; 75, 90, 88, 93, 83, 11, 79, 47, 25, 91, 54, 84, 27, 73, 66, …
+$ mentality_composure         &lt;int&gt; 96, 88, 95, 93, 89, 68, 88, 70, 70, 91, 84, 90, 66, 89, 84, …
+$ defending_marking_awareness &lt;int&gt; 20, 35, 24, 35, 68, 27, 26, 17, 25, 50, 90, 43, 20, 50, 85, …
+$ defending_standing_tackle   &lt;int&gt; 35, 42, 32, 32, 65, 12, 34, 10, 13, 36, 93, 24, 18, 34, 88, …
+$ defending_sliding_tackle    &lt;int&gt; 24, 19, 24, 29, 53, 18, 32, 11, 10, 38, 86, 18, 16, 33, 87, …
+$ goalkeeping_diving          &lt;int&gt; 6, 15, 7, 9, 15, 87, 13, 88, 88, 8, 15, 13, 84, 11, 13, 13, …
+$ goalkeeping_handling        &lt;int&gt; 11, 6, 11, 9, 13, 92, 5, 88, 85, 10, 12, 11, 89, 13, 14, 10,…
+$ goalkeeping_kicking         &lt;int&gt; 15, 12, 15, 15, 5, 78, 7, 91, 88, 11, 10, 5, 74, 13, 16, 13,…
+$ goalkeeping_positioning     &lt;int&gt; 14, 8, 14, 15, 10, 90, 11, 89, 88, 14, 7, 5, 86, 6, 12, 11, …
+$ goalkeeping_reflexes        &lt;int&gt; 8, 10, 11, 11, 13, 90, 6, 88, 90, 11, 10, 7, 88, 10, 12, 11,…
+$ goalkeeping_speed           &lt;int&gt; NA, NA, NA, NA, NA, 50, NA, 56, 43, NA, NA, NA, 46, NA, NA, …
+$ ls                          &lt;chr&gt; &quot;89+3&quot;, &quot;90+2&quot;, &quot;90+1&quot;, &quot;83+3&quot;, &quot;83+3&quot;, &quot;33+3&quot;, &quot;89+3&quot;, &quot;40+…
+$ st                          &lt;chr&gt; &quot;89+3&quot;, &quot;90+2&quot;, &quot;90+1&quot;, &quot;83+3&quot;, &quot;83+3&quot;, &quot;33+3&quot;, &quot;89+3&quot;, &quot;40+…
+$ rs                          &lt;chr&gt; &quot;89+3&quot;, &quot;90+2&quot;, &quot;90+1&quot;, &quot;83+3&quot;, &quot;83+3&quot;, &quot;33+3&quot;, &quot;89+3&quot;, &quot;40+…
+$ lw                          &lt;chr&gt; &quot;92&quot;, &quot;85&quot;, &quot;88&quot;, &quot;90&quot;, &quot;88&quot;, &quot;32&quot;, &quot;90&quot;, &quot;40&quot;, &quot;35&quot;, &quot;84&quot;, …
+$ lf                          &lt;chr&gt; &quot;93&quot;, &quot;88&quot;, &quot;89&quot;, &quot;88&quot;, &quot;87&quot;, &quot;35&quot;, &quot;90&quot;, &quot;43&quot;, &quot;38&quot;, &quot;86&quot;, …
+$ cf                          &lt;chr&gt; &quot;93&quot;, &quot;88&quot;, &quot;89&quot;, &quot;88&quot;, &quot;87&quot;, &quot;35&quot;, &quot;90&quot;, &quot;43&quot;, &quot;38&quot;, &quot;86&quot;, …
+$ rf                          &lt;chr&gt; &quot;93&quot;, &quot;88&quot;, &quot;89&quot;, &quot;88&quot;, &quot;87&quot;, &quot;35&quot;, &quot;90&quot;, &quot;43&quot;, &quot;38&quot;, &quot;86&quot;, …
+$ rw                          &lt;chr&gt; &quot;92&quot;, &quot;85&quot;, &quot;88&quot;, &quot;90&quot;, &quot;88&quot;, &quot;32&quot;, &quot;90&quot;, &quot;40&quot;, &quot;35&quot;, &quot;84&quot;, …
+$ lam                         &lt;chr&gt; &quot;93&quot;, &quot;86+3&quot;, &quot;86+3&quot;, &quot;89+2&quot;, &quot;89+2&quot;, &quot;38+3&quot;, &quot;89+3&quot;, &quot;47+3&quot;…
+$ cam                         &lt;chr&gt; &quot;93&quot;, &quot;86+3&quot;, &quot;86+3&quot;, &quot;89+2&quot;, &quot;89+2&quot;, &quot;38+3&quot;, &quot;89+3&quot;, &quot;47+3&quot;…
+$ ram                         &lt;chr&gt; &quot;93&quot;, &quot;86+3&quot;, &quot;86+3&quot;, &quot;89+2&quot;, &quot;89+2&quot;, &quot;38+3&quot;, &quot;89+3&quot;, &quot;47+3&quot;…
+$ lm                          &lt;chr&gt; &quot;91+2&quot;, &quot;84+3&quot;, &quot;86+3&quot;, &quot;89+2&quot;, &quot;89+2&quot;, &quot;35+3&quot;, &quot;89+3&quot;, &quot;44+…
+$ lcm                         &lt;chr&gt; &quot;87+3&quot;, &quot;80+3&quot;, &quot;78+3&quot;, &quot;82+3&quot;, &quot;89+2&quot;, &quot;38+3&quot;, &quot;81+3&quot;, &quot;50+…
+$ cm                          &lt;chr&gt; &quot;87+3&quot;, &quot;80+3&quot;, &quot;78+3&quot;, &quot;82+3&quot;, &quot;89+2&quot;, &quot;38+3&quot;, &quot;81+3&quot;, &quot;50+…
+$ rcm                         &lt;chr&gt; &quot;87+3&quot;, &quot;80+3&quot;, &quot;78+3&quot;, &quot;82+3&quot;, &quot;89+2&quot;, &quot;38+3&quot;, &quot;81+3&quot;, &quot;50+…
+$ rm                          &lt;chr&gt; &quot;91+2&quot;, &quot;84+3&quot;, &quot;86+3&quot;, &quot;89+2&quot;, &quot;89+2&quot;, &quot;35+3&quot;, &quot;89+3&quot;, &quot;44+…
+$ lwb                         &lt;chr&gt; &quot;66+3&quot;, &quot;64+3&quot;, &quot;63+3&quot;, &quot;67+3&quot;, &quot;79+3&quot;, &quot;32+3&quot;, &quot;67+3&quot;, &quot;37+…
+$ ldm                         &lt;chr&gt; &quot;64+3&quot;, &quot;66+3&quot;, &quot;59+3&quot;, &quot;63+3&quot;, &quot;80+3&quot;, &quot;36+3&quot;, &quot;63+3&quot;, &quot;43+…
+$ cdm                         &lt;chr&gt; &quot;64+3&quot;, &quot;66+3&quot;, &quot;59+3&quot;, &quot;63+3&quot;, &quot;80+3&quot;, &quot;36+3&quot;, &quot;63+3&quot;, &quot;43+…
+$ rdm                         &lt;chr&gt; &quot;64+3&quot;, &quot;66+3&quot;, &quot;59+3&quot;, &quot;63+3&quot;, &quot;80+3&quot;, &quot;36+3&quot;, &quot;63+3&quot;, &quot;43+…
+$ rwb                         &lt;chr&gt; &quot;66+3&quot;, &quot;64+3&quot;, &quot;63+3&quot;, &quot;67+3&quot;, &quot;79+3&quot;, &quot;32+3&quot;, &quot;67+3&quot;, &quot;37+…
+$ lb                          &lt;chr&gt; &quot;61+3&quot;, &quot;61+3&quot;, &quot;60+3&quot;, &quot;62+3&quot;, &quot;75+3&quot;, &quot;32+3&quot;, &quot;63+3&quot;, &quot;35+…
+$ lcb                         &lt;chr&gt; &quot;50+3&quot;, &quot;60+3&quot;, &quot;53+3&quot;, &quot;50+3&quot;, &quot;69+3&quot;, &quot;33+3&quot;, &quot;54+3&quot;, &quot;34+…
+$ cb                          &lt;chr&gt; &quot;50+3&quot;, &quot;60+3&quot;, &quot;53+3&quot;, &quot;50+3&quot;, &quot;69+3&quot;, &quot;33+3&quot;, &quot;54+3&quot;, &quot;34+…
+$ rcb                         &lt;chr&gt; &quot;50+3&quot;, &quot;60+3&quot;, &quot;53+3&quot;, &quot;50+3&quot;, &quot;69+3&quot;, &quot;33+3&quot;, &quot;54+3&quot;, &quot;34+…
+$ rb                          &lt;chr&gt; &quot;61+3&quot;, &quot;61+3&quot;, &quot;60+3&quot;, &quot;62+3&quot;, &quot;75+3&quot;, &quot;32+3&quot;, &quot;63+3&quot;, &quot;35+…
+$ gk                          &lt;chr&gt; &quot;19+3&quot;, &quot;19+3&quot;, &quot;20+3&quot;, &quot;20+3&quot;, &quot;21+3&quot;, &quot;89+3&quot;, &quot;18+3&quot;, &quot;88+…
+$ player_face_url             &lt;chr&gt; &quot;https://cdn.sofifa.net/players/158/023/22_120.png&quot;, &quot;https:…
+$ club_logo_url               &lt;chr&gt; &quot;https://cdn.sofifa.net/teams/73/60.png&quot;, &quot;https://cdn.sofif…
+$ club_flag_url               &lt;chr&gt; &quot;https://cdn.sofifa.net/flags/fr.png&quot;, &quot;https://cdn.sofifa.n…
+$ nation_logo_url             &lt;chr&gt; &quot;https://cdn.sofifa.net/teams/1369/60.png&quot;, &quot;https://cdn.sof…
+$ nation_flag_url             &lt;chr&gt; &quot;https://cdn.sofifa.net/flags/ar.png&quot;, &quot;https://cdn.sofifa.n…</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>The dataset is loaded it has multiple columns with numerical and
+categorical values.</p>
+</div>
+<div id="task-2-rows-and-columns" class="section level2">
+<h2>Task 2: Rows and Columns</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubl9yb3dzIDwtIG5yb3cocGxheWVycylcbm5fY29scyA8LSBuY29sKHBsYXllcnMpXG5cbmNfbmFtZXMgPC0gY29sbmFtZXMocGxheWVycylcbmNfbmFtZXNcbmBgYCJ9 -->
+<pre class="r"><code>n_rows &lt;- nrow(players)
+n_cols &lt;- ncol(players)
+
+c_names &lt;- colnames(players)
+c_names</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiICBbMV0gXCJzb2ZpZmFfaWRcIiAgICAgICAgICAgICAgICAgICBcInBsYXllcl91cmxcIiAgICAgICAgICAgICAgICAgIFwic2hvcnRfbmFtZVwiICAgICAgICAgICAgICAgICBcbiAgWzRdIFwibG9uZ19uYW1lXCIgICAgICAgICAgICAgICAgICAgXCJwbGF5ZXJfcG9zaXRpb25zXCIgICAgICAgICAgICBcIm92ZXJhbGxcIiAgICAgICAgICAgICAgICAgICAgXG4gIFs3XSBcInBvdGVudGlhbFwiICAgICAgICAgICAgICAgICAgIFwidmFsdWVfZXVyXCIgICAgICAgICAgICAgICAgICAgXCJ3YWdlX2V1clwiICAgICAgICAgICAgICAgICAgIFxuIFsxMF0gXCJhZ2VcIiAgICAgICAgICAgICAgICAgICAgICAgICBcImRvYlwiICAgICAgICAgICAgICAgICAgICAgICAgIFwiaGVpZ2h0X2NtXCIgICAgICAgICAgICAgICAgICBcbiBbMTNdIFwid2VpZ2h0X2tnXCIgICAgICAgICAgICAgICAgICAgXCJjbHViX3RlYW1faWRcIiAgICAgICAgICAgICAgICBcImNsdWJfbmFtZVwiICAgICAgICAgICAgICAgICAgXG4gWzE2XSBcImxlYWd1ZV9uYW1lXCIgICAgICAgICAgICAgICAgIFwibGVhZ3VlX2xldmVsXCIgICAgICAgICAgICAgICAgXCJjbHViX3Bvc2l0aW9uXCIgICAgICAgICAgICAgIFxuIFsxOV0gXCJjbHViX2plcnNleV9udW1iZXJcIiAgICAgICAgICBcImNsdWJfbG9hbmVkX2Zyb21cIiAgICAgICAgICAgIFwiY2x1Yl9qb2luZWRcIiAgICAgICAgICAgICAgICBcbiBbMjJdIFwiY2x1Yl9jb250cmFjdF92YWxpZF91bnRpbFwiICAgXCJuYXRpb25hbGl0eV9pZFwiICAgICAgICAgICAgICBcIm5hdGlvbmFsaXR5X25hbWVcIiAgICAgICAgICAgXG4gWzI1XSBcIm5hdGlvbl90ZWFtX2lkXCIgICAgICAgICAgICAgIFwibmF0aW9uX3Bvc2l0aW9uXCIgICAgICAgICAgICAgXCJuYXRpb25famVyc2V5X251bWJlclwiICAgICAgIFxuIFsyOF0gXCJwcmVmZXJyZWRfZm9vdFwiICAgICAgICAgICAgICBcIndlYWtfZm9vdFwiICAgICAgICAgICAgICAgICAgIFwic2tpbGxfbW92ZXNcIiAgICAgICAgICAgICAgICBcbiBbMzFdIFwiaW50ZXJuYXRpb25hbF9yZXB1dGF0aW9uXCIgICAgXCJ3b3JrX3JhdGVcIiAgICAgICAgICAgICAgICAgICBcImJvZHlfdHlwZVwiICAgICAgICAgICAgICAgICAgXG4gWzM0XSBcInJlYWxfZmFjZVwiICAgICAgICAgICAgICAgICAgIFwicmVsZWFzZV9jbGF1c2VfZXVyXCIgICAgICAgICAgXCJwbGF5ZXJfdGFnc1wiICAgICAgICAgICAgICAgIFxuIFszN10gXCJwbGF5ZXJfdHJhaXRzXCIgICAgICAgICAgICAgICBcInBhY2VcIiAgICAgICAgICAgICAgICAgICAgICAgIFwic2hvb3RpbmdcIiAgICAgICAgICAgICAgICAgICBcbiBbNDBdIFwicGFzc2luZ1wiICAgICAgICAgICAgICAgICAgICAgXCJkcmliYmxpbmdcIiAgICAgICAgICAgICAgICAgICBcImRlZmVuZGluZ1wiICAgICAgICAgICAgICAgICAgXG4gWzQzXSBcInBoeXNpY1wiICAgICAgICAgICAgICAgICAgICAgIFwiYXR0YWNraW5nX2Nyb3NzaW5nXCIgICAgICAgICAgXCJhdHRhY2tpbmdfZmluaXNoaW5nXCIgICAgICAgIFxuIFs0Nl0gXCJhdHRhY2tpbmdfaGVhZGluZ19hY2N1cmFjeVwiICBcImF0dGFja2luZ19zaG9ydF9wYXNzaW5nXCIgICAgIFwiYXR0YWNraW5nX3ZvbGxleXNcIiAgICAgICAgICBcbiBbNDldIFwic2tpbGxfZHJpYmJsaW5nXCIgICAgICAgICAgICAgXCJza2lsbF9jdXJ2ZVwiICAgICAgICAgICAgICAgICBcInNraWxsX2ZrX2FjY3VyYWN5XCIgICAgICAgICAgXG4gWzUyXSBcInNraWxsX2xvbmdfcGFzc2luZ1wiICAgICAgICAgIFwic2tpbGxfYmFsbF9jb250cm9sXCIgICAgICAgICAgXCJtb3ZlbWVudF9hY2NlbGVyYXRpb25cIiAgICAgIFxuIFs1NV0gXCJtb3ZlbWVudF9zcHJpbnRfc3BlZWRcIiAgICAgICBcIm1vdmVtZW50X2FnaWxpdHlcIiAgICAgICAgICAgIFwibW92ZW1lbnRfcmVhY3Rpb25zXCIgICAgICAgICBcbiBbNThdIFwibW92ZW1lbnRfYmFsYW5jZVwiICAgICAgICAgICAgXCJwb3dlcl9zaG90X3Bvd2VyXCIgICAgICAgICAgICBcInBvd2VyX2p1bXBpbmdcIiAgICAgICAgICAgICAgXG4gWzYxXSBcInBvd2VyX3N0YW1pbmFcIiAgICAgICAgICAgICAgIFwicG93ZXJfc3RyZW5ndGhcIiAgICAgICAgICAgICAgXCJwb3dlcl9sb25nX3Nob3RzXCIgICAgICAgICAgIFxuIFs2NF0gXCJtZW50YWxpdHlfYWdncmVzc2lvblwiICAgICAgICBcIm1lbnRhbGl0eV9pbnRlcmNlcHRpb25zXCIgICAgIFwibWVudGFsaXR5X3Bvc2l0aW9uaW5nXCIgICAgICBcbiBbNjddIFwibWVudGFsaXR5X3Zpc2lvblwiICAgICAgICAgICAgXCJtZW50YWxpdHlfcGVuYWx0aWVzXCIgICAgICAgICBcIm1lbnRhbGl0eV9jb21wb3N1cmVcIiAgICAgICAgXG4gWzcwXSBcImRlZmVuZGluZ19tYXJraW5nX2F3YXJlbmVzc1wiIFwiZGVmZW5kaW5nX3N0YW5kaW5nX3RhY2tsZVwiICAgXCJkZWZlbmRpbmdfc2xpZGluZ190YWNrbGVcIiAgIFxuIFs3M10gXCJnb2Fsa2VlcGluZ19kaXZpbmdcIiAgICAgICAgICBcImdvYWxrZWVwaW5nX2hhbmRsaW5nXCIgICAgICAgIFwiZ29hbGtlZXBpbmdfa2lja2luZ1wiICAgICAgICBcbiBbNzZdIFwiZ29hbGtlZXBpbmdfcG9zaXRpb25pbmdcIiAgICAgXCJnb2Fsa2VlcGluZ19yZWZsZXhlc1wiICAgICAgICBcImdvYWxrZWVwaW5nX3NwZWVkXCIgICAgICAgICAgXG4gWzc5XSBcImxzXCIgICAgICAgICAgICAgICAgICAgICAgICAgIFwic3RcIiAgICAgICAgICAgICAgICAgICAgICAgICAgXCJyc1wiICAgICAgICAgICAgICAgICAgICAgICAgIFxuIFs4Ml0gXCJsd1wiICAgICAgICAgICAgICAgICAgICAgICAgICBcImxmXCIgICAgICAgICAgICAgICAgICAgICAgICAgIFwiY2ZcIiAgICAgICAgICAgICAgICAgICAgICAgICBcbiBbODVdIFwicmZcIiAgICAgICAgICAgICAgICAgICAgICAgICAgXCJyd1wiICAgICAgICAgICAgICAgICAgICAgICAgICBcImxhbVwiICAgICAgICAgICAgICAgICAgICAgICAgXG4gWzg4XSBcImNhbVwiICAgICAgICAgICAgICAgICAgICAgICAgIFwicmFtXCIgICAgICAgICAgICAgICAgICAgICAgICAgXCJsbVwiICAgICAgICAgICAgICAgICAgICAgICAgIFxuIFs5MV0gXCJsY21cIiAgICAgICAgICAgICAgICAgICAgICAgICBcImNtXCIgICAgICAgICAgICAgICAgICAgICAgICAgIFwicmNtXCIgICAgICAgICAgICAgICAgICAgICAgICBcbiBbOTRdIFwicm1cIiAgICAgICAgICAgICAgICAgICAgICAgICAgXCJsd2JcIiAgICAgICAgICAgICAgICAgICAgICAgICBcImxkbVwiICAgICAgICAgICAgICAgICAgICAgICAgXG4gWzk3XSBcImNkbVwiICAgICAgICAgICAgICAgICAgICAgICAgIFwicmRtXCIgICAgICAgICAgICAgICAgICAgICAgICAgXCJyd2JcIiAgICAgICAgICAgICAgICAgICAgICAgIFxuWzEwMF0gXCJsYlwiICAgICAgICAgICAgICAgICAgICAgICAgICBcImxjYlwiICAgICAgICAgICAgICAgICAgICAgICAgIFwiY2JcIiAgICAgICAgICAgICAgICAgICAgICAgICBcblsxMDNdIFwicmNiXCIgICAgICAgICAgICAgICAgICAgICAgICAgXCJyYlwiICAgICAgICAgICAgICAgICAgICAgICAgICBcImdrXCIgICAgICAgICAgICAgICAgICAgICAgICAgXG5bMTA2XSBcInBsYXllcl9mYWNlX3VybFwiICAgICAgICAgICAgIFwiY2x1Yl9sb2dvX3VybFwiICAgICAgICAgICAgICAgXCJjbHViX2ZsYWdfdXJsXCIgICAgICAgICAgICAgIFxuWzEwOV0gXCJuYXRpb25fbG9nb191cmxcIiAgICAgICAgICAgICBcIm5hdGlvbl9mbGFnX3VybFwiICAgICAgICAgICAgXG4ifQ== -->
+<pre><code>  [1] &quot;sofifa_id&quot;                   &quot;player_url&quot;                  &quot;short_name&quot;                 
+  [4] &quot;long_name&quot;                   &quot;player_positions&quot;            &quot;overall&quot;                    
+  [7] &quot;potential&quot;                   &quot;value_eur&quot;                   &quot;wage_eur&quot;                   
+ [10] &quot;age&quot;                         &quot;dob&quot;                         &quot;height_cm&quot;                  
+ [13] &quot;weight_kg&quot;                   &quot;club_team_id&quot;                &quot;club_name&quot;                  
+ [16] &quot;league_name&quot;                 &quot;league_level&quot;                &quot;club_position&quot;              
+ [19] &quot;club_jersey_number&quot;          &quot;club_loaned_from&quot;            &quot;club_joined&quot;                
+ [22] &quot;club_contract_valid_until&quot;   &quot;nationality_id&quot;              &quot;nationality_name&quot;           
+ [25] &quot;nation_team_id&quot;              &quot;nation_position&quot;             &quot;nation_jersey_number&quot;       
+ [28] &quot;preferred_foot&quot;              &quot;weak_foot&quot;                   &quot;skill_moves&quot;                
+ [31] &quot;international_reputation&quot;    &quot;work_rate&quot;                   &quot;body_type&quot;                  
+ [34] &quot;real_face&quot;                   &quot;release_clause_eur&quot;          &quot;player_tags&quot;                
+ [37] &quot;player_traits&quot;               &quot;pace&quot;                        &quot;shooting&quot;                   
+ [40] &quot;passing&quot;                     &quot;dribbling&quot;                   &quot;defending&quot;                  
+ [43] &quot;physic&quot;                      &quot;attacking_crossing&quot;          &quot;attacking_finishing&quot;        
+ [46] &quot;attacking_heading_accuracy&quot;  &quot;attacking_short_passing&quot;     &quot;attacking_volleys&quot;          
+ [49] &quot;skill_dribbling&quot;             &quot;skill_curve&quot;                 &quot;skill_fk_accuracy&quot;          
+ [52] &quot;skill_long_passing&quot;          &quot;skill_ball_control&quot;          &quot;movement_acceleration&quot;      
+ [55] &quot;movement_sprint_speed&quot;       &quot;movement_agility&quot;            &quot;movement_reactions&quot;         
+ [58] &quot;movement_balance&quot;            &quot;power_shot_power&quot;            &quot;power_jumping&quot;              
+ [61] &quot;power_stamina&quot;               &quot;power_strength&quot;              &quot;power_long_shots&quot;           
+ [64] &quot;mentality_aggression&quot;        &quot;mentality_interceptions&quot;     &quot;mentality_positioning&quot;      
+ [67] &quot;mentality_vision&quot;            &quot;mentality_penalties&quot;         &quot;mentality_composure&quot;        
+ [70] &quot;defending_marking_awareness&quot; &quot;defending_standing_tackle&quot;   &quot;defending_sliding_tackle&quot;   
+ [73] &quot;goalkeeping_diving&quot;          &quot;goalkeeping_handling&quot;        &quot;goalkeeping_kicking&quot;        
+ [76] &quot;goalkeeping_positioning&quot;     &quot;goalkeeping_reflexes&quot;        &quot;goalkeeping_speed&quot;          
+ [79] &quot;ls&quot;                          &quot;st&quot;                          &quot;rs&quot;                         
+ [82] &quot;lw&quot;                          &quot;lf&quot;                          &quot;cf&quot;                         
+ [85] &quot;rf&quot;                          &quot;rw&quot;                          &quot;lam&quot;                        
+ [88] &quot;cam&quot;                         &quot;ram&quot;                         &quot;lm&quot;                         
+ [91] &quot;lcm&quot;                         &quot;cm&quot;                          &quot;rcm&quot;                        
+ [94] &quot;rm&quot;                          &quot;lwb&quot;                         &quot;ldm&quot;                        
+ [97] &quot;cdm&quot;                         &quot;rdm&quot;                         &quot;rwb&quot;                        
+[100] &quot;lb&quot;                          &quot;lcb&quot;                         &quot;cb&quot;                         
+[103] &quot;rcb&quot;                         &quot;rb&quot;                          &quot;gk&quot;                         
+[106] &quot;player_face_url&quot;             &quot;club_logo_url&quot;               &quot;club_flag_url&quot;              
+[109] &quot;nation_logo_url&quot;             &quot;nation_flag_url&quot;            </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaXNfbGFiZWxlZCA8LSAhaXMubnVsbChjX25hbWVzKVxucHJpbnQocGFzdGUoXCJBcmUgYWxsIGxhYmVsZWQ6XCIsIGlzX2xhYmVsZWQpKVxuYGBgIn0= -->
+<pre class="r"><code>is_labeled &lt;- !is.null(c_names)
+print(paste(&quot;Are all labeled:&quot;, is_labeled))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiQXJlIGFsbCBsYWJlbGVkOiBUUlVFXCJcbiJ9 -->
+<pre><code>[1] &quot;Are all labeled: TRUE&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29sdW1uc190eXBlcyA8LSBzYXBwbHkocGxheWVycywgY2xhc3MpXG5pc19ob21vZ2VuZW91cyA8LSBsZW5ndGgodW5pcXVlKGNvbHVtbnNfdHlwZXMpKSA9PSAxXG5wcmludChwYXN0ZShcIkFyZSBhbGwgaG9tb2dlbmVvdXM6XCIsIGlzX2hvbW9nZW5lb3VzKSlcbmBgYCJ9 -->
+<pre class="r"><code>columns_types &lt;- sapply(players, class)
+is_homogeneous &lt;- length(unique(columns_types)) == 1
+print(paste(&quot;Are all homogeneous:&quot;, is_homogeneous))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiQXJlIGFsbCBob21vZ2VuZW91czogRkFMU0VcIlxuIn0= -->
+<pre><code>[1] &quot;Are all homogeneous: FALSE&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="task-3-column-type-counts" class="section level2">
+<h2>Task 3: Column Type Counts</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29sX3R5cGVfY291bnRzIDwtIHRhYmxlKHNhcHBseShwbGF5ZXJzLCBjbGFzcykpXG5wcmludChjb2xfdHlwZV9jb3VudHMpXG5gYGAifQ== -->
+<pre class="r"><code>col_type_counts &lt;- table(sapply(players, class))
+print(col_type_counts)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5jaGFyYWN0ZXIgICBpbnRlZ2VyICAgbnVtZXJpYyBcbiAgICAgICA1MCAgICAgICAgNTYgICAgICAgICA0IFxuIn0= -->
+<pre><code>
+character   integer   numeric 
+       50        56         4 </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="task-4-count-complete-records" class="section level2">
+<h2>Task 4: Count Complete Records</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5ucm93KHBsYXllcnMpXG5gYGAifQ== -->
+<pre class="r"><code>
+nrow(players)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDE5MjM5XG4ifQ== -->
+<pre><code>[1] 19239</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VtKHJvd1N1bXMoaXMubmEoZGYpKSA+IDApXG5gYGAifQ== -->
+<pre class="r"><code>sum(rowSums(is.na(df)) &gt; 0)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDE5MjM5XG4ifQ== -->
+<pre><code>[1] 19239</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>That means that we have 0 complete rows</p>
+</div>
+<div id="task-5-count-duplicates" class="section level2">
+<h2>Task 5: Count Duplicates</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubnVtX2R1cGxpY2F0ZV9yb3dzIDwtIHN1bShkdXBsaWNhdGVkKHBsYXllcnMpKVxubnVtX2R1cGxpY2F0ZV9jb2xzIDwtIHN1bShkdXBsaWNhdGVkKHQocGxheWVycykpKVxubGlzdChudW1fZHVwbGljYXRlX3Jvd3MgPSBudW1fZHVwbGljYXRlX3Jvd3MsIG51bV9kdXBsaWNhdGVfY29scyA9IG51bV9kdXBsaWNhdGVfY29scylcbmBgYCJ9 -->
+<pre class="r"><code>num_duplicate_rows &lt;- sum(duplicated(players))
+num_duplicate_cols &lt;- sum(duplicated(t(players)))
+list(num_duplicate_rows = num_duplicate_rows, num_duplicate_cols = num_duplicate_cols)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiJG51bV9kdXBsaWNhdGVfcm93c1xuWzFdIDBcblxuJG51bV9kdXBsaWNhdGVfY29sc1xuWzFdIDE2XG4ifQ== -->
+<pre><code>$num_duplicate_rows
+[1] 0
+
+$num_duplicate_cols
+[1] 16</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZHVwbGljYXRlZCh0KHBsYXllcnMpKVxuYGBgIn0= -->
+<pre class="r"><code>duplicated(t(players))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgICAgICAgICAgICAgc29maWZhX2lkICAgICAgICAgICAgICAgICAgcGxheWVyX3VybCAgICAgICAgICAgICAgICAgIHNob3J0X25hbWUgXG4gICAgICAgICAgICAgICAgICAgICAgRkFMU0UgICAgICAgICAgICAgICAgICAgICAgIEZBTFNFICAgICAgICAgICAgICAgICAgICAgICBGQUxTRSBcbiAgICAgICAgICAgICAgICAgIGxvbmdfbmFtZSAgICAgICAgICAgIHBsYXllcl9wb3NpdGlvbnMgICAgICAgICAgICAgICAgICAgICBvdmVyYWxsIFxuICAgICAgICAgICAgICAgICAgICAgIEZBTFNFICAgICAgICAgICAgICAgICAgICAgICBGQUxTRSAgICAgICAgICAgICAgICAgICAgICAgRkFMU0UgXG4gICAgICAgICAgICAgICAgICBwb3RlbnRpYWwgICAgICAgICAgICAgICAgICAgdmFsdWVfZXVyICAgICAgICAgICAgICAgICAgICB3YWdlX2V1ciBcbiAgICAgICAgICAgICAgICAgICAgICBGQUxTRSAgICAgICAgICAgICAgICAgICAgICAgRkFMU0UgICAgICAgICAgICAgICAgICAgICAgIEZBTFNFIFxuICAgICAgICAgICAgICAgICAgICAgICAgYWdlICAgICAgICAgICAgICAgICAgICAgICAgIGRvYiAgICAgICAgICAgICAgICAgICBoZWlnaHRfY20gXG4gICAgICAgICAgICAgICAgICAgICAgRkFMU0UgICAgICAgICAgICAgICAgICAgICAgIEZBTFNFICAgICAgICAgICAgICAgICAgICAgICBGQUxTRSBcbiAgICAgICAgICAgICAgICAgIHdlaWdodF9rZyAgICAgICAgICAgICAgICBjbHViX3RlYW1faWQgICAgICAgICAgICAgICAgICAgY2x1Yl9uYW1lIFxuICAgICAgICAgICAgICAgICAgICAgIEZBTFNFICAgICAgICAgICAgICAgICAgICAgICBGQUxTRSAgICAgICAgICAgICAgICAgICAgICAgRkFMU0UgXG4gICAgICAgICAgICAgICAgbGVhZ3VlX25hbWUgICAgICAgICAgICAgICAgbGVhZ3VlX2xldmVsICAgICAgICAgICAgICAgY2x1Yl9wb3NpdGlvbiBcbiAgICAgICAgICAgICAgICAgICAgICBGQUxTRSAgICAgICAgICAgICAgICAgICAgICAgRkFMU0UgICAgICAgICAgICAgICAgICAgICAgIEZBTFNFIFxuICAgICAgICAgY2x1Yl9qZXJzZXlfbnVtYmVyICAgICAgICAgICAgY2x1Yl9sb2FuZWRfZnJvbSAgICAgICAgICAgICAgICAgY2x1Yl9qb2luZWQgXG4gICAgICAgICAgICAgICAgICAgICAgRkFMU0UgICAgICAgICAgICAgICAgICAgICAgIEZBTFNFICAgICAgICAgICAgICAgICAgICAgICBGQUxTRSBcbiAgY2x1Yl9jb250cmFjdF92YWxpZF91bnRpbCAgICAgICAgICAgICAgbmF0aW9uYWxpdHlfaWQgICAgICAgICAgICBuYXRpb25hbGl0eV9uYW1lIFxuICAgICAgICAgICAgICAgICAgICAgIEZBTFNFICAgICAgICAgICAgICAgICAgICAgICBGQUxTRSAgICAgICAgICAgICAgICAgICAgICAgRkFMU0UgXG4gICAgICAgICAgICAgbmF0aW9uX3RlYW1faWQgICAgICAgICAgICAgbmF0aW9uX3Bvc2l0aW9uICAgICAgICBuYXRpb25famVyc2V5X251bWJlciBcbiAgICAgICAgICAgICAgICAgICAgICBGQUxTRSAgICAgICAgICAgICAgICAgICAgICAgRkFMU0UgICAgICAgICAgICAgICAgICAgICAgIEZBTFNFIFxuICAgICAgICAgICAgIHByZWZlcnJlZF9mb290ICAgICAgICAgICAgICAgICAgIHdlYWtfZm9vdCAgICAgICAgICAgICAgICAgc2tpbGxfbW92ZXMgXG4gICAgICAgICAgICAgICAgICAgICAgRkFMU0UgICAgICAgICAgICAgICAgICAgICAgIEZBTFNFICAgICAgICAgICAgICAgICAgICAgICBGQUxTRSBcbiAgIGludGVybmF0aW9uYWxfcmVwdXRhdGlvbiAgICAgICAgICAgICAgICAgICB3b3JrX3JhdGUgICAgICAgICAgICAgICAgICAgYm9keV90eXBlIFxuICAgICAgICAgICAgICAgICAgICAgIEZBTFNFICAgICAgICAgICAgICAgICAgICAgICBGQUxTRSAgICAgICAgICAgICAgICAgICAgICAgRkFMU0UgXG4gICAgICAgICAgICAgICAgICByZWFsX2ZhY2UgICAgICAgICAgcmVsZWFzZV9jbGF1c2VfZXVyICAgICAgICAgICAgICAgICBwbGF5ZXJfdGFncyBcbiAgICAgICAgICAgICAgICAgICAgICBGQUxTRSAgICAgICAgICAgICAgICAgICAgICAgRkFMU0UgICAgICAgICAgICAgICAgICAgICAgIEZBTFNFIFxuICAgICAgICAgICAgICBwbGF5ZXJfdHJhaXRzICAgICAgICAgICAgICAgICAgICAgICAgcGFjZSAgICAgICAgICAgICAgICAgICAgc2hvb3RpbmcgXG4gICAgICAgICAgICAgICAgICAgICAgRkFMU0UgICAgICAgICAgICAgICAgICAgICAgIEZBTFNFICAgICAgICAgICAgICAgICAgICAgICBGQUxTRSBcbiAgICAgICAgICAgICAgICAgICAgcGFzc2luZyAgICAgICAgICAgICAgICAgICBkcmliYmxpbmcgICAgICAgICAgICAgICAgICAgZGVmZW5kaW5nIFxuICAgICAgICAgICAgICAgICAgICAgIEZBTFNFICAgICAgICAgICAgICAgICAgICAgICBGQUxTRSAgICAgICAgICAgICAgICAgICAgICAgRkFMU0UgXG4gICAgICAgICAgICAgICAgICAgICBwaHlzaWMgICAgICAgICAgYXR0YWNraW5nX2Nyb3NzaW5nICAgICAgICAgYXR0YWNraW5nX2ZpbmlzaGluZyBcbiAgICAgICAgICAgICAgICAgICAgICBGQUxTRSAgICAgICAgICAgICAgICAgICAgICAgRkFMU0UgICAgICAgICAgICAgICAgICAgICAgIEZBTFNFIFxuIGF0dGFja2luZ19oZWFkaW5nX2FjY3VyYWN5ICAgICBhdHRhY2tpbmdfc2hvcnRfcGFzc2luZyAgICAgICAgICAgYXR0YWNraW5nX3ZvbGxleXMgXG4gICAgICAgICAgICAgICAgICAgICAgRkFMU0UgICAgICAgICAgICAgICAgICAgICAgIEZBTFNFICAgICAgICAgICAgICAgICAgICAgICBGQUxTRSBcbiAgICAgICAgICAgIHNraWxsX2RyaWJibGluZyAgICAgICAgICAgICAgICAgc2tpbGxfY3VydmUgICAgICAgICAgIHNraWxsX2ZrX2FjY3VyYWN5IFxuICAgICAgICAgICAgICAgICAgICAgIEZBTFNFICAgICAgICAgICAgICAgICAgICAgICBGQUxTRSAgICAgICAgICAgICAgICAgICAgICAgRkFMU0UgXG4gICAgICAgICBza2lsbF9sb25nX3Bhc3NpbmcgICAgICAgICAgc2tpbGxfYmFsbF9jb250cm9sICAgICAgIG1vdmVtZW50X2FjY2VsZXJhdGlvbiBcbiAgICAgICAgICAgICAgICAgICAgICBGQUxTRSAgICAgICAgICAgICAgICAgICAgICAgRkFMU0UgICAgICAgICAgICAgICAgICAgICAgIEZBTFNFIFxuICAgICAgbW92ZW1lbnRfc3ByaW50X3NwZWVkICAgICAgICAgICAgbW92ZW1lbnRfYWdpbGl0eSAgICAgICAgICBtb3ZlbWVudF9yZWFjdGlvbnMgXG4gICAgICAgICAgICAgICAgICAgICAgRkFMU0UgICAgICAgICAgICAgICAgICAgICAgIEZBTFNFICAgICAgICAgICAgICAgICAgICAgICBGQUxTRSBcbiAgICAgICAgICAgbW92ZW1lbnRfYmFsYW5jZSAgICAgICAgICAgIHBvd2VyX3Nob3RfcG93ZXIgICAgICAgICAgICAgICBwb3dlcl9qdW1waW5nIFxuICAgICAgICAgICAgICAgICAgICAgIEZBTFNFICAgICAgICAgICAgICAgICAgICAgICBGQUxTRSAgICAgICAgICAgICAgICAgICAgICAgRkFMU0UgXG4gICAgICAgICAgICAgIHBvd2VyX3N0YW1pbmEgICAgICAgICAgICAgIHBvd2VyX3N0cmVuZ3RoICAgICAgICAgICAgcG93ZXJfbG9uZ19zaG90cyBcbiAgICAgICAgICAgICAgICAgICAgICBGQUxTRSAgICAgICAgICAgICAgICAgICAgICAgRkFMU0UgICAgICAgICAgICAgICAgICAgICAgIEZBTFNFIFxuICAgICAgIG1lbnRhbGl0eV9hZ2dyZXNzaW9uICAgICBtZW50YWxpdHlfaW50ZXJjZXB0aW9ucyAgICAgICBtZW50YWxpdHlfcG9zaXRpb25pbmcgXG4gICAgICAgICAgICAgICAgICAgICAgRkFMU0UgICAgICAgICAgICAgICAgICAgICAgIEZBTFNFICAgICAgICAgICAgICAgICAgICAgICBGQUxTRSBcbiAgICAgICAgICAgbWVudGFsaXR5X3Zpc2lvbiAgICAgICAgIG1lbnRhbGl0eV9wZW5hbHRpZXMgICAgICAgICBtZW50YWxpdHlfY29tcG9zdXJlIFxuICAgICAgICAgICAgICAgICAgICAgIEZBTFNFICAgICAgICAgICAgICAgICAgICAgICBGQUxTRSAgICAgICAgICAgICAgICAgICAgICAgRkFMU0UgXG5kZWZlbmRpbmdfbWFya2luZ19hd2FyZW5lc3MgICBkZWZlbmRpbmdfc3RhbmRpbmdfdGFja2xlICAgIGRlZmVuZGluZ19zbGlkaW5nX3RhY2tsZSBcbiAgICAgICAgICAgICAgICAgICAgICBGQUxTRSAgICAgICAgICAgICAgICAgICAgICAgRkFMU0UgICAgICAgICAgICAgICAgICAgICAgIEZBTFNFIFxuICAgICAgICAgZ29hbGtlZXBpbmdfZGl2aW5nICAgICAgICBnb2Fsa2VlcGluZ19oYW5kbGluZyAgICAgICAgIGdvYWxrZWVwaW5nX2tpY2tpbmcgXG4gICAgICAgICAgICAgICAgICAgICAgRkFMU0UgICAgICAgICAgICAgICAgICAgICAgIEZBTFNFICAgICAgICAgICAgICAgICAgICAgICBGQUxTRSBcbiAgICBnb2Fsa2VlcGluZ19wb3NpdGlvbmluZyAgICAgICAgZ29hbGtlZXBpbmdfcmVmbGV4ZXMgICAgICAgICAgIGdvYWxrZWVwaW5nX3NwZWVkIFxuICAgICAgICAgICAgICAgICAgICAgIEZBTFNFICAgICAgICAgICAgICAgICAgICAgICBGQUxTRSAgICAgICAgICAgICAgICAgICAgICAgRkFMU0UgXG4gICAgICAgICAgICAgICAgICAgICAgICAgbHMgICAgICAgICAgICAgICAgICAgICAgICAgIHN0ICAgICAgICAgICAgICAgICAgICAgICAgICBycyBcbiAgICAgICAgICAgICAgICAgICAgICBGQUxTRSAgICAgICAgICAgICAgICAgICAgICAgIFRSVUUgICAgICAgICAgICAgICAgICAgICAgICBUUlVFIFxuICAgICAgICAgICAgICAgICAgICAgICAgIGx3ICAgICAgICAgICAgICAgICAgICAgICAgICBsZiAgICAgICAgICAgICAgICAgICAgICAgICAgY2YgXG4gICAgICAgICAgICAgICAgICAgICAgRkFMU0UgICAgICAgICAgICAgICAgICAgICAgIEZBTFNFICAgICAgICAgICAgICAgICAgICAgICAgVFJVRSBcbiAgICAgICAgICAgICAgICAgICAgICAgICByZiAgICAgICAgICAgICAgICAgICAgICAgICAgcncgICAgICAgICAgICAgICAgICAgICAgICAgbGFtIFxuICAgICAgICAgICAgICAgICAgICAgICBUUlVFICAgICAgICAgICAgICAgICAgICAgICAgVFJVRSAgICAgICAgICAgICAgICAgICAgICAgRkFMU0UgXG4gICAgICAgICAgICAgICAgICAgICAgICBjYW0gICAgICAgICAgICAgICAgICAgICAgICAgcmFtICAgICAgICAgICAgICAgICAgICAgICAgICBsbSBcbiAgICAgICAgICAgICAgICAgICAgICAgVFJVRSAgICAgICAgICAgICAgICAgICAgICAgIFRSVUUgICAgICAgICAgICAgICAgICAgICAgIEZBTFNFIFxuICAgICAgICAgICAgICAgICAgICAgICAgbGNtICAgICAgICAgICAgICAgICAgICAgICAgICBjbSAgICAgICAgICAgICAgICAgICAgICAgICByY20gXG4gICAgICAgICAgICAgICAgICAgICAgRkFMU0UgICAgICAgICAgICAgICAgICAgICAgICBUUlVFICAgICAgICAgICAgICAgICAgICAgICAgVFJVRSBcbiAgICAgICAgICAgICAgICAgICAgICAgICBybSAgICAgICAgICAgICAgICAgICAgICAgICBsd2IgICAgICAgICAgICAgICAgICAgICAgICAgbGRtIFxuICAgICAgICAgICAgICAgICAgICAgICBUUlVFICAgICAgICAgICAgICAgICAgICAgICBGQUxTRSAgICAgICAgICAgICAgICAgICAgICAgRkFMU0UgXG4gICAgICAgICAgICAgICAgICAgICAgICBjZG0gICAgICAgICAgICAgICAgICAgICAgICAgcmRtICAgICAgICAgICAgICAgICAgICAgICAgIHJ3YiBcbiAgICAgICAgICAgICAgICAgICAgICAgVFJVRSAgICAgICAgICAgICAgICAgICAgICAgIFRSVUUgICAgICAgICAgICAgICAgICAgICAgICBUUlVFIFxuICAgICAgICAgICAgICAgICAgICAgICAgIGxiICAgICAgICAgICAgICAgICAgICAgICAgIGxjYiAgICAgICAgICAgICAgICAgICAgICAgICAgY2IgXG4gICAgICAgICAgICAgICAgICAgICAgRkFMU0UgICAgICAgICAgICAgICAgICAgICAgIEZBTFNFICAgICAgICAgICAgICAgICAgICAgICAgVFJVRSBcbiAgICAgICAgICAgICAgICAgICAgICAgIHJjYiAgICAgICAgICAgICAgICAgICAgICAgICAgcmIgICAgICAgICAgICAgICAgICAgICAgICAgIGdrIFxuICAgICAgICAgICAgICAgICAgICAgICBUUlVFICAgICAgICAgICAgICAgICAgICAgICAgVFJVRSAgICAgICAgICAgICAgICAgICAgICAgRkFMU0UgXG4gICAgICAgICAgICBwbGF5ZXJfZmFjZV91cmwgICAgICAgICAgICAgICBjbHViX2xvZ29fdXJsICAgICAgICAgICAgICAgY2x1Yl9mbGFnX3VybCBcbiAgICAgICAgICAgICAgICAgICAgICBGQUxTRSAgICAgICAgICAgICAgICAgICAgICAgRkFMU0UgICAgICAgICAgICAgICAgICAgICAgIEZBTFNFIFxuICAgICAgICAgICAgbmF0aW9uX2xvZ29fdXJsICAgICAgICAgICAgIG5hdGlvbl9mbGFnX3VybCBcbiAgICAgICAgICAgICAgICAgICAgICBGQUxTRSAgICAgICAgICAgICAgICAgICAgICAgRkFMU0UgXG4ifQ== -->
+<pre><code>                  sofifa_id                  player_url                  short_name 
+                      FALSE                       FALSE                       FALSE 
+                  long_name            player_positions                     overall 
+                      FALSE                       FALSE                       FALSE 
+                  potential                   value_eur                    wage_eur 
+                      FALSE                       FALSE                       FALSE 
+                        age                         dob                   height_cm 
+                      FALSE                       FALSE                       FALSE 
+                  weight_kg                club_team_id                   club_name 
+                      FALSE                       FALSE                       FALSE 
+                league_name                league_level               club_position 
+                      FALSE                       FALSE                       FALSE 
+         club_jersey_number            club_loaned_from                 club_joined 
+                      FALSE                       FALSE                       FALSE 
+  club_contract_valid_until              nationality_id            nationality_name 
+                      FALSE                       FALSE                       FALSE 
+             nation_team_id             nation_position        nation_jersey_number 
+                      FALSE                       FALSE                       FALSE 
+             preferred_foot                   weak_foot                 skill_moves 
+                      FALSE                       FALSE                       FALSE 
+   international_reputation                   work_rate                   body_type 
+                      FALSE                       FALSE                       FALSE 
+                  real_face          release_clause_eur                 player_tags 
+                      FALSE                       FALSE                       FALSE 
+              player_traits                        pace                    shooting 
+                      FALSE                       FALSE                       FALSE 
+                    passing                   dribbling                   defending 
+                      FALSE                       FALSE                       FALSE 
+                     physic          attacking_crossing         attacking_finishing 
+                      FALSE                       FALSE                       FALSE 
+ attacking_heading_accuracy     attacking_short_passing           attacking_volleys 
+                      FALSE                       FALSE                       FALSE 
+            skill_dribbling                 skill_curve           skill_fk_accuracy 
+                      FALSE                       FALSE                       FALSE 
+         skill_long_passing          skill_ball_control       movement_acceleration 
+                      FALSE                       FALSE                       FALSE 
+      movement_sprint_speed            movement_agility          movement_reactions 
+                      FALSE                       FALSE                       FALSE 
+           movement_balance            power_shot_power               power_jumping 
+                      FALSE                       FALSE                       FALSE 
+              power_stamina              power_strength            power_long_shots 
+                      FALSE                       FALSE                       FALSE 
+       mentality_aggression     mentality_interceptions       mentality_positioning 
+                      FALSE                       FALSE                       FALSE 
+           mentality_vision         mentality_penalties         mentality_composure 
+                      FALSE                       FALSE                       FALSE 
+defending_marking_awareness   defending_standing_tackle    defending_sliding_tackle 
+                      FALSE                       FALSE                       FALSE 
+         goalkeeping_diving        goalkeeping_handling         goalkeeping_kicking 
+                      FALSE                       FALSE                       FALSE 
+    goalkeeping_positioning        goalkeeping_reflexes           goalkeeping_speed 
+                      FALSE                       FALSE                       FALSE 
+                         ls                          st                          rs 
+                      FALSE                        TRUE                        TRUE 
+                         lw                          lf                          cf 
+                      FALSE                       FALSE                        TRUE 
+                         rf                          rw                         lam 
+                       TRUE                        TRUE                       FALSE 
+                        cam                         ram                          lm 
+                       TRUE                        TRUE                       FALSE 
+                        lcm                          cm                         rcm 
+                      FALSE                        TRUE                        TRUE 
+                         rm                         lwb                         ldm 
+                       TRUE                       FALSE                       FALSE 
+                        cdm                         rdm                         rwb 
+                       TRUE                        TRUE                        TRUE 
+                         lb                         lcb                          cb 
+                      FALSE                       FALSE                        TRUE 
+                        rcb                          rb                          gk 
+                       TRUE                        TRUE                       FALSE 
+            player_face_url               club_logo_url               club_flag_url 
+                      FALSE                       FALSE                       FALSE 
+            nation_logo_url             nation_flag_url 
+                      FALSE                       FALSE </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>This shows which columns are duplicated</p>
+</div>
+<div id="task-6-numeric-and-categorical-data-ranges" class="section level2">
+<h2>Task 6: Numeric and Categorical Data Ranges</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubnVtZXJpY19kYXRhIDwtIHBsYXllcnNbLCBzYXBwbHkocGxheWVycywgaXMubnVtZXJpYyldICBcbm51bWVyaWNfcmFuZ2VzIDwtIGRhdGEuZnJhbWUoXG4gIG1pbiA9IHNhcHBseShudW1lcmljX2RhdGEsIG1pbiwgbmEucm0gPSBUUlVFKSxcbiAgbWF4ID0gc2FwcGx5KG51bWVyaWNfZGF0YSwgbWF4LCBuYS5ybSA9IFRSVUUpXG4pXG5udW1lcmljX3Jhbmdlc1xuYGBgIn0= -->
+<pre class="r"><code>numeric_data &lt;- players[, sapply(players, is.numeric)]  
+numeric_ranges &lt;- data.frame(
+  min = sapply(numeric_data, min, na.rm = TRUE),
+  max = sapply(numeric_data, max, na.rm = TRUE)
+)
+numeric_ranges</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6NjAsIm5jb2wiOjIsInN1bW1hcnkiOnsiRGVzY3JpcHRpb24iOlsiZGYgWzYwIMOXIDJdIl19fSwicmRmIjoiSDRzSUFBQUFBQUFBQm8xV3kyNGNSUlF0ZS93bU1XTjdySmpId2tKSWVBRWpSQkFQNFNodEpRcEliQkFDTWxLUTJqVTlOVDJWNmU1cVZWZlBlRmJNUjNpUlhaYjVBMVlzbkMvSXIyUVBDdHp1dXJjZlpZTllXS2ZyblB1cVc3ZHEvT1BEd2QyZHdRNWpyTVBXT2l1c3N3NmZiUDNubng1OThoVmphNnV3V0dGcmJMdkFDekE2Z0krQzNJVy9VKy9oc3JCbTNyZUkzeUcrdkxUNG0yZnhVMll4T0cvWjNYL05ia1R2K1dWN2ZmbnNQKzBydTFlWTd4VFhueUYramZnTjRzZUk5eENQRUJsaUQvRjl4QzNFcm1OUDZ3OFFqNTM0L1grcGcvalBFYjlBUEVHODY4VC8wS21ET1R6VmVlTDQ5UnhrL3hPeFBvYm5mTmI5eVBLUFBjU3JFczllSE1zU0QzOHRDZTk3OUpkVzk1NHNMZjcxNktwVnh3RDE1MzlZbko1Yi9QUExzdkxxL056NkVjOStmM0J5WHNhaGVwWTMxdWY5UXJoMDdLNGMrMlhiYnNBY2V5Yys2WlIvNE4zc1Y2MnYydWo2dVhWUjNkZjgzVHllZzZ6dC85aTFJeDN6L1dCNTU2S3ZKendXR1h4MFdYSFpMZG1KWlZKOThndkhaVnVyZWIvcGRrcENwc1p5ekgwNVFtSlR6WVRtVVVSNnFveElqT1FWTWVOUkxueVJheVMyNWp4c3JqdXdKTnVKa09IRStFRk14TndTMHhDSlcwR1VEMzBqZUZ4WGNDc1NQSVFVa1pnSnlycGYyajBWT2hNTFA4bmpvYUIwNzVSS29CS2plV0I4cUU2Ty9Cd3FKdGZkaEJ1cEV1RE5vazZDckpPNmgreE5pYUIyUHZYSFNoa2szc3FtTW9yOEdCcVdJWFVrRXlNMEpmUzFTSE5UTG1nYldzRG1NdUVIRWMrelp0ZldVaDVRMjdheUNXU1JDVFZwTStWWlZpKzNSMW9PaDFHVEVHT1JqR3BpSTUwc01obFFVbTRNRDZZZys0Rld6VWdIdFRLV2ljd210ZlJ1TFUwRUwyTDdQQWh5NlBFQ0xlN1VGbEN2Tm42N3lyMWFucWtvRWd2cTBkdTJiZTRtc0p1UVlrWjkyTFBVZU9xbTNyZENwQ0I0T3lzcVExNkVLbVpDMFJnY0Z1Y1V3eWdYd2VBVWRQTmNhakZMdFN4QkNCcUtidTBaeW1LS0tGZkZhd0dqQjlHeWF4NVFDRStxZysybWFpNTAwUzdvVnZHSi9HM0xQODNqdE40S2twbmhjTE01alMyUldpU2htYlRqbHYwb2dsTWR2YUlHTy9nOERMV0FUbFZidmxOcjVkQUdJbTF1NGJDV1U1WEpRcXBMNjliaVREWmlIalNjQkZ3QUk2dWIwWkFDRlVQSVhGTlgzcXZHMTQrNUxpZUd6emxzRU9xbFMxNmJRRC9zUnpGZEVjVTRhaGpBQTNCTjN3OFZqNlpDRlAzMVIzSlc3NlhYVkNZUXV6R1RCMDF0S3N0cHB2WTFwZXNkYWtYVlloeUppNm9WZTAzTkRwcnp2c1Bya05GRFRlVE9pQnZlSDJ0NHcySDF4bkhaVkhoNmJMWDREM0REY1Y3UkRyRUxUNXZRTWpqV1BBbUZtNnVUd2tZZ1pVblp2OXVJcDQzdlZWdkU2dC9vdmtIUEQ4eW1US2oxNnhFZlZ1OTRaeVJtVkFMOEpKVy9TUDN5eXRFMmdjMzZScG5xQjJjblVCRXg1Y2JabTM4QUJ6WFVUeFVMQUFBPSJ9 -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["min"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["max"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"41","2":"264640","_rn_":"sofifa_id"},{"1":"47","2":"93","_rn_":"overall"},{"1":"49","2":"95","_rn_":"potential"},{"1":"9000","2":"194000000","_rn_":"value_eur"},{"1":"500","2":"350000","_rn_":"wage_eur"},{"1":"16","2":"54","_rn_":"age"},{"1":"155","2":"206","_rn_":"height_cm"},{"1":"49","2":"110","_rn_":"weight_kg"},{"1":"1","2":"115820","_rn_":"club_team_id"},{"1":"1","2":"5","_rn_":"league_level"},{"1":"1","2":"99","_rn_":"club_jersey_number"},{"1":"2021","2":"2031","_rn_":"club_contract_valid_until"},{"1":"1","2":"219","_rn_":"nationality_id"},{"1":"1318","2":"111473","_rn_":"nation_team_id"},{"1":"1","2":"28","_rn_":"nation_jersey_number"},{"1":"1","2":"5","_rn_":"weak_foot"},{"1":"1","2":"5","_rn_":"skill_moves"},{"1":"1","2":"5","_rn_":"international_reputation"},{"1":"16000","2":"373500000","_rn_":"release_clause_eur"},{"1":"28","2":"97","_rn_":"pace"},{"1":"18","2":"94","_rn_":"shooting"},{"1":"25","2":"93","_rn_":"passing"},{"1":"27","2":"95","_rn_":"dribbling"},{"1":"14","2":"91","_rn_":"defending"},{"1":"29","2":"90","_rn_":"physic"},{"1":"6","2":"94","_rn_":"attacking_crossing"},{"1":"2","2":"95","_rn_":"attacking_finishing"},{"1":"5","2":"93","_rn_":"attacking_heading_accuracy"},{"1":"7","2":"94","_rn_":"attacking_short_passing"},{"1":"3","2":"90","_rn_":"attacking_volleys"},{"1":"4","2":"96","_rn_":"skill_dribbling"},{"1":"6","2":"94","_rn_":"skill_curve"},{"1":"4","2":"94","_rn_":"skill_fk_accuracy"},{"1":"9","2":"93","_rn_":"skill_long_passing"},{"1":"8","2":"96","_rn_":"skill_ball_control"},{"1":"14","2":"97","_rn_":"movement_acceleration"},{"1":"15","2":"97","_rn_":"movement_sprint_speed"},{"1":"18","2":"96","_rn_":"movement_agility"},{"1":"25","2":"94","_rn_":"movement_reactions"},{"1":"15","2":"96","_rn_":"movement_balance"},{"1":"20","2":"95","_rn_":"power_shot_power"},{"1":"22","2":"95","_rn_":"power_jumping"},{"1":"12","2":"97","_rn_":"power_stamina"},{"1":"19","2":"97","_rn_":"power_strength"},{"1":"4","2":"94","_rn_":"power_long_shots"},{"1":"10","2":"95","_rn_":"mentality_aggression"},{"1":"3","2":"91","_rn_":"mentality_interceptions"},{"1":"2","2":"96","_rn_":"mentality_positioning"},{"1":"10","2":"95","_rn_":"mentality_vision"},{"1":"7","2":"93","_rn_":"mentality_penalties"},{"1":"12","2":"96","_rn_":"mentality_composure"},{"1":"4","2":"93","_rn_":"defending_marking_awareness"},{"1":"5","2":"93","_rn_":"defending_standing_tackle"},{"1":"5","2":"92","_rn_":"defending_sliding_tackle"},{"1":"2","2":"91","_rn_":"goalkeeping_diving"},{"1":"2","2":"92","_rn_":"goalkeeping_handling"},{"1":"2","2":"93","_rn_":"goalkeeping_kicking"},{"1":"2","2":"92","_rn_":"goalkeeping_positioning"},{"1":"2","2":"90","_rn_":"goalkeeping_reflexes"},{"1":"15","2":"65","_rn_":"goalkeeping_speed"}],"options":{"columns":{"min":{},"max":[10],"total":[2]},"rows":{"min":[10],"max":[10],"total":[60]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Check min and max values of each numeric column</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY2F0ZWdvcmljYWxfZGF0YSA8LSBwbGF5ZXJzWywgc2FwcGx5KHBsYXllcnMsIGlzLmNoYXJhY3RlcildXG5jYXRlZ29yaWNhbF92YWx1ZXMgPC0gc2FwcGx5KGNhdGVnb3JpY2FsX2RhdGEsIGZ1bmN0aW9uKGNvbCkgbGVuZ3RoKHVuaXF1ZShjb2wpKSlcbmNhdGVnb3JpY2FsX3ZhbHVlcyA8LSBkYXRhLmZyYW1lKGNvbHVtbiA9IG5hbWVzKGNhdGVnb3JpY2FsX3ZhbHVlcyksIHVuaXF1ZV9jb3VudCA9IGNhdGVnb3JpY2FsX3ZhbHVlcylcblxuY2F0ZWdvcmljYWxfdmFsdWVzXG5gYGAifQ== -->
+<pre class="r"><code>categorical_data &lt;- players[, sapply(players, is.character)]
+categorical_values &lt;- sapply(categorical_data, function(col) length(unique(col)))
+categorical_values &lt;- data.frame(column = names(categorical_values), unique_count = categorical_values)
+
+categorical_values</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6NTAsIm5jb2wiOjIsInN1bW1hcnkiOnsiRGVzY3JpcHRpb24iOlsiZGYgWzUwIMOXIDJdIl19fSwicmRmIjoiSDRzSUFBQUFBQUFBQnUxVnNZN1VNQkNkVFhiM2RBc0xKMmdvQUNFYUtyWTRKTVFIb0JNU0JSSUM2YnJJNjNoRE9HOGNKZzU3MjFQeEdkRHdGVWhJZkFJL2dFUkh3UStnZzNIVzQvakNKM0RGeU0vUE0yT1BNODk1L3ZqNHdleDRCZ0Fwak5NUnBCT0NNSG41NHVqK0k0QnhRcE1SakdIZmphZmtkSjJBSXcvSUR2M0NyTlppcXpCclVUUFR2REpvczBxc2xXZjJ0YW1LbURqd1FiVnBTbHVhcXZGOG1wc2x4MGpkTHVPWVMxcUpvbFV4TmU5OE9Bbm43a2h0UktYeWJJVm16ZkVkLzlxVXhMTnJKVnlnMEtYZHhubXY3dmhoNWlzMXFwVkNkSG1Oc1h6UWpjR1RESVVOMVM1TnZzM3N0ZzRFS3FHemxaQ2hGRisrRlFWWFBtY0tSV21aVEhSQURXK1hZTCs2Q1dqRlNBYUVQV0svVkF1K2pWVDJFQU5NZENDMURLVHNQWHNTZTgvTk1zQzh6OTlEakdEd1RYUWZKUU1aRUcwVlNBeW9PT0V2NUsvTFhXclVlblAvN1F2ekQ3blNvb2hJL3NRRFg2YURONFYzelE1UDd3RWNmYWVSUkpCOEFManhpY2JQdEVaS2dkc2trR2NBZXc4SmZ5Uzc1WVhTeWNIako2U29telQraU93OTJidkkzUHgzWkQvSnZrWG01bC9KZmtYbTVsOW8vN1EzTjRkbWQrYnVqSFIrdUxzNzJ6bFZUMXpUTjE3UmlTZW4wdWgyelUxL3VhM0tOeVE3YWRyS0RzTDMwV3dXY1lxTFIrSGlVZmdmSG9YeklwSmFOS3dBSm1lNXNHS3hRdGMvQUdlRGtEMVQ3em9jRXZkUG5RNkNSemdncmtucXBNSmdLWVcrZzZJcTFIQy90SzRLLzlpTXZNMzllQmpoWkhlUTVJOFBuN0xtVlZXUUJyZ2lMWmFLcTA5ejlaWjduZlRleVgxUlkxbHg4ODJJYlJiV1dCSEVUaThJTTEzeGNQWVg0WDg0bVdzSUFBQT0ifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["column"],"name":[1],"type":["chr"],"align":["left"]},{"label":["unique_count"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"player_url","2":"19239","_rn_":"player_url"},{"1":"short_name","2":"18145","_rn_":"short_name"},{"1":"long_name","2":"19219","_rn_":"long_name"},{"1":"player_positions","2":"674","_rn_":"player_positions"},{"1":"dob","2":"6312","_rn_":"dob"},{"1":"club_name","2":"702","_rn_":"club_name"},{"1":"league_name","2":"56","_rn_":"league_name"},{"1":"club_position","2":"30","_rn_":"club_position"},{"1":"club_loaned_from","2":"335","_rn_":"club_loaned_from"},{"1":"club_joined","2":"1846","_rn_":"club_joined"},{"1":"nationality_name","2":"163","_rn_":"nationality_name"},{"1":"nation_position","2":"29","_rn_":"nation_position"},{"1":"preferred_foot","2":"2","_rn_":"preferred_foot"},{"1":"work_rate","2":"9","_rn_":"work_rate"},{"1":"body_type","2":"10","_rn_":"body_type"},{"1":"real_face","2":"2","_rn_":"real_face"},{"1":"player_tags","2":"72","_rn_":"player_tags"},{"1":"player_traits","2":"1052","_rn_":"player_traits"},{"1":"ls","2":"228","_rn_":"ls"},{"1":"st","2":"228","_rn_":"st"},{"1":"rs","2":"228","_rn_":"rs"},{"1":"lw","2":"138","_rn_":"lw"},{"1":"lf","2":"132","_rn_":"lf"},{"1":"cf","2":"132","_rn_":"cf"},{"1":"rf","2":"132","_rn_":"rf"},{"1":"rw","2":"138","_rn_":"rw"},{"1":"lam","2":"252","_rn_":"lam"},{"1":"cam","2":"252","_rn_":"cam"},{"1":"ram","2":"252","_rn_":"ram"},{"1":"lm","2":"235","_rn_":"lm"},{"1":"lcm","2":"212","_rn_":"lcm"},{"1":"cm","2":"212","_rn_":"cm"},{"1":"rcm","2":"212","_rn_":"rcm"},{"1":"rm","2":"235","_rn_":"rm"},{"1":"lwb","2":"196","_rn_":"lwb"},{"1":"ldm","2":"239","_rn_":"ldm"},{"1":"cdm","2":"239","_rn_":"cdm"},{"1":"rdm","2":"239","_rn_":"rdm"},{"1":"rwb","2":"196","_rn_":"rwb"},{"1":"lb","2":"193","_rn_":"lb"},{"1":"lcb","2":"259","_rn_":"lcb"},{"1":"cb","2":"259","_rn_":"cb"},{"1":"rcb","2":"259","_rn_":"rcb"},{"1":"rb","2":"193","_rn_":"rb"},{"1":"gk","2":"115","_rn_":"gk"},{"1":"player_face_url","2":"19239","_rn_":"player_face_url"},{"1":"club_logo_url","2":"702","_rn_":"club_logo_url"},{"1":"club_flag_url","2":"50","_rn_":"club_flag_url"},{"1":"nation_logo_url","2":"34","_rn_":"nation_logo_url"},{"1":"nation_flag_url","2":"163","_rn_":"nation_flag_url"}],"options":{"columns":{"min":{},"max":[10],"total":[2]},"rows":{"min":[10],"max":[10],"total":[50]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Count uniique values</p>
+</div>
+<div id="task-7-data-structure-analysis" class="section level2">
+<h2>Task 7: Data Structure Analysis</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2xpbXBzZShwbGF5ZXJzKVxuYGBgIn0= -->
+<pre class="r"><code>glimpse(players)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiUm93czogMTksMjM5XG5Db2x1bW5zOiAxMTBcbiQgc29maWZhX2lkICAgICAgICAgICAgICAgICAgIDxpbnQ+IDE1ODAyMywgMTg4NTQ1LCAyMDgwMSwgMTkwODcxLCAxOTI5ODUsIDIwMDM4OSwgMjMxNzQ3LCAxNjc0OeKAplxuJCBwbGF5ZXJfdXJsICAgICAgICAgICAgICAgICAgPGNocj4gXCJodHRwczovL3NvZmlmYS5jb20vcGxheWVyLzE1ODAyMy9saW9uZWwtbWVzc2kvMjIwMDAyXCIsIFwiaHR04oCmXG4kIHNob3J0X25hbWUgICAgICAgICAgICAgICAgICA8Y2hyPiBcIkwuIE1lc3NpXCIsIFwiUi4gTGV3YW5kb3dza2lcIiwgXCJDcmlzdGlhbm8gUm9uYWxkb1wiLCBcIk5leW1hciBK4oCmXG4kIGxvbmdfbmFtZSAgICAgICAgICAgICAgICAgICA8Y2hyPiBcIkxpb25lbCBBbmRyw6lzIE1lc3NpIEN1Y2NpdHRpbmlcIiwgXCJSb2JlcnQgTGV3YW5kb3dza2lcIiwgXCJDcmnigKZcbiQgcGxheWVyX3Bvc2l0aW9ucyAgICAgICAgICAgIDxjaHI+IFwiUlcsIFNULCBDRlwiLCBcIlNUXCIsIFwiU1QsIExXXCIsIFwiTFcsIENBTVwiLCBcIkNNLCBDQU1cIiwgXCJHS1wiLCBcIlPigKZcbiQgb3ZlcmFsbCAgICAgICAgICAgICAgICAgICAgIDxpbnQ+IDkzLCA5MiwgOTEsIDkxLCA5MSwgOTEsIDkxLCA5MCwgOTAsIDkwLCA5MCwgODksIDg5LCA4OSwgODksIOKAplxuJCBwb3RlbnRpYWwgICAgICAgICAgICAgICAgICAgPGludD4gOTMsIDkyLCA5MSwgOTEsIDkxLCA5MywgOTUsIDkwLCA5MiwgOTAsIDkwLCA4OSwgOTEsIDg5LCA4OSwg4oCmXG4kIHZhbHVlX2V1ciAgICAgICAgICAgICAgICAgICA8ZGJsPiA3ODAwMDAwMCwgMTE5NTAwMDAwLCA0NTAwMDAwMCwgMTI5MDAwMDAwLCAxMjU1MDAwMDAsIDExMjAwMDDigKZcbiQgd2FnZV9ldXIgICAgICAgICAgICAgICAgICAgIDxkYmw+IDMyMDAwMCwgMjcwMDAwLCAyNzAwMDAsIDI3MDAwMCwgMzUwMDAwLCAxMzAwMDAsIDIzMDAwMCwgODYwMOKAplxuJCBhZ2UgICAgICAgICAgICAgICAgICAgICAgICAgPGludD4gMzQsIDMyLCAzNiwgMjksIDMwLCAyOCwgMjIsIDM1LCAyOSwgMjcsIDMwLCAzMywgMjksIDI4LCAyOSwg4oCmXG4kIGRvYiAgICAgICAgICAgICAgICAgICAgICAgICA8Y2hyPiBcIjE5ODctMDYtMjRcIiwgXCIxOTg4LTA4LTIxXCIsIFwiMTk4NS0wMi0wNVwiLCBcIjE5OTItMDItMDVcIiwgXCIxOTnigKZcbiQgaGVpZ2h0X2NtICAgICAgICAgICAgICAgICAgIDxpbnQ+IDE3MCwgMTg1LCAxODcsIDE3NSwgMTgxLCAxODgsIDE4MiwgMTkzLCAxODcsIDE4OCwgMTY4LCAxODUsIOKAplxuJCB3ZWlnaHRfa2cgICAgICAgICAgICAgICAgICAgPGludD4gNzIsIDgxLCA4MywgNjgsIDcwLCA4NywgNzMsIDkzLCA4NSwgODksIDcwLCA4MSwgOTYsIDc4LCA4NCwg4oCmXG4kIGNsdWJfdGVhbV9pZCAgICAgICAgICAgICAgICA8ZGJsPiA3MywgMjEsIDExLCA3MywgMTAsIDI0MCwgNzMsIDIxLCAyNDEsIDE4LCA1LCAyNDMsIDI0MywgMTgsIDLigKZcbiQgY2x1Yl9uYW1lICAgICAgICAgICAgICAgICAgIDxjaHI+IFwiUGFyaXMgU2FpbnQtR2VybWFpblwiLCBcIkZDIEJheWVybiBNw7xuY2hlblwiLCBcIk1hbmNoZXN0ZXIgVW5pdOKAplxuJCBsZWFndWVfbmFtZSAgICAgICAgICAgICAgICAgPGNocj4gXCJGcmVuY2ggTGlndWUgMVwiLCBcIkdlcm1hbiAxLiBCdW5kZXNsaWdhXCIsIFwiRW5nbGlzaCBQcmVtaWVyIEzigKZcbiQgbGVhZ3VlX2xldmVsICAgICAgICAgICAgICAgIDxpbnQ+IDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIDEsIOKAplxuJCBjbHViX3Bvc2l0aW9uICAgICAgICAgICAgICAgPGNocj4gXCJSV1wiLCBcIlNUXCIsIFwiU1RcIiwgXCJMV1wiLCBcIlJDTVwiLCBcIkdLXCIsIFwiU1RcIiwgXCJHS1wiLCBcIkdLXCIsIFwiU1RcIizigKZcbiQgY2x1Yl9qZXJzZXlfbnVtYmVyICAgICAgICAgIDxpbnQ+IDMwLCA5LCA3LCAxMCwgMTcsIDEzLCA3LCAxLCAxLCAxMCwgNywgOSwgMSwgNywgMTQsIDQsIDEwLCAxMeKAplxuJCBjbHViX2xvYW5lZF9mcm9tICAgICAgICAgICAgPGNocj4gXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwgXCJcIiwg4oCmXG4kIGNsdWJfam9pbmVkICAgICAgICAgICAgICAgICA8Y2hyPiBcIjIwMjEtMDgtMTBcIiwgXCIyMDE0LTA3LTAxXCIsIFwiMjAyMS0wOC0yN1wiLCBcIjIwMTctMDgtMDNcIiwgXCIyMDHigKZcbiQgY2x1Yl9jb250cmFjdF92YWxpZF91bnRpbCAgIDxpbnQ+IDIwMjMsIDIwMjMsIDIwMjMsIDIwMjUsIDIwMjUsIDIwMjMsIDIwMjIsIDIwMjMsIDIwMjUsIDIwMjQsIOKAplxuJCBuYXRpb25hbGl0eV9pZCAgICAgICAgICAgICAgPGludD4gNTIsIDM3LCAzOCwgNTQsIDcsIDQ0LCAxOCwgMjEsIDIxLCAxNCwgMTgsIDE4LCA3LCAxNjcsIDU0LCAz4oCmXG4kIG5hdGlvbmFsaXR5X25hbWUgICAgICAgICAgICA8Y2hyPiBcIkFyZ2VudGluYVwiLCBcIlBvbGFuZFwiLCBcIlBvcnR1Z2FsXCIsIFwiQnJhemlsXCIsIFwiQmVsZ2l1bVwiLCBcIlNsb+KAplxuJCBuYXRpb25fdGVhbV9pZCAgICAgICAgICAgICAgPGRibD4gMTM2OSwgMTM1MywgMTM1NCwgTkEsIDEzMjUsIE5BLCAxMzM1LCAxMzM3LCBOQSwgMTMxOCwgMTMzNSwg4oCmXG4kIG5hdGlvbl9wb3NpdGlvbiAgICAgICAgICAgICA8Y2hyPiBcIlJXXCIsIFwiUlNcIiwgXCJTVFwiLCBcIlwiLCBcIlJDTVwiLCBcIlwiLCBcIkxXXCIsIFwiR0tcIiwgXCJcIiwgXCJTVFwiLCBcIkNETVwi4oCmXG4kIG5hdGlvbl9qZXJzZXlfbnVtYmVyICAgICAgICA8aW50PiAxMCwgOSwgNywgTkEsIDcsIE5BLCAxMCwgMSwgTkEsIDksIDEzLCAxOSwgMSwgTkEsIE5BLCA0LCBOQSzigKZcbiQgcHJlZmVycmVkX2Zvb3QgICAgICAgICAgICAgIDxjaHI+IFwiTGVmdFwiLCBcIlJpZ2h0XCIsIFwiUmlnaHRcIiwgXCJSaWdodFwiLCBcIlJpZ2h0XCIsIFwiUmlnaHRcIiwgXCJSaWdodFwi4oCmXG4kIHdlYWtfZm9vdCAgICAgICAgICAgICAgICAgICA8aW50PiA0LCA0LCA0LCA1LCA1LCAzLCA0LCA0LCA0LCA1LCAzLCA0LCAzLCA1LCAzLCAzLCA0LCAzLCAzLCA0LCDigKZcbiQgc2tpbGxfbW92ZXMgICAgICAgICAgICAgICAgIDxpbnQ+IDQsIDQsIDUsIDUsIDQsIDEsIDUsIDEsIDEsIDMsIDIsIDQsIDEsIDQsIDIsIDIsIDQsIDQsIDEsIDMsIOKAplxuJCBpbnRlcm5hdGlvbmFsX3JlcHV0YXRpb24gICAgPGludD4gNSwgNSwgNSwgNSwgNCwgNSwgNCwgNSwgNCwgNCwgNCwgNCwgNCwgNCwgMywgNCwgNCwgNCwgMywgNCwg4oCmXG4kIHdvcmtfcmF0ZSAgICAgICAgICAgICAgICAgICA8Y2hyPiBcIk1lZGl1bS9Mb3dcIiwgXCJIaWdoL01lZGl1bVwiLCBcIkhpZ2gvTG93XCIsIFwiSGlnaC9NZWRpdW1cIiwgXCJIaWfigKZcbiQgYm9keV90eXBlICAgICAgICAgICAgICAgICAgIDxjaHI+IFwiVW5pcXVlXCIsIFwiVW5pcXVlXCIsIFwiVW5pcXVlXCIsIFwiVW5pcXVlXCIsIFwiVW5pcXVlXCIsIFwiVW5pcXVlXCIsIOKAplxuJCByZWFsX2ZhY2UgICAgICAgICAgICAgICAgICAgPGNocj4gXCJZZXNcIiwgXCJZZXNcIiwgXCJZZXNcIiwgXCJZZXNcIiwgXCJZZXNcIiwgXCJZZXNcIiwgXCJZZXNcIiwgXCJZZXNcIiwgXCJZZXPigKZcbiQgcmVsZWFzZV9jbGF1c2VfZXVyICAgICAgICAgIDxpbnQ+IDE0NDMwMDAwMCwgMTk3MjAwMDAwLCA4MzMwMDAwMCwgMjM4NzAwMDAwLCAyMzIyMDAwMDAsIDIzODAwMOKAplxuJCBwbGF5ZXJfdGFncyAgICAgICAgICAgICAgICAgPGNocj4gXCIjRHJpYmJsZXIsICNEaXN0YW5jZSBTaG9vdGVyLCAjRksgU3BlY2lhbGlzdCwgI0Fjcm9iYXQsICNDbOKAplxuJCBwbGF5ZXJfdHJhaXRzICAgICAgICAgICAgICAgPGNocj4gXCJGaW5lc3NlIFNob3QsIExvbmcgU2hvdCBUYWtlciAoQUkpLCBQbGF5bWFrZXIgKEFJKSwgT3V0c2lkZeKAplxuJCBwYWNlICAgICAgICAgICAgICAgICAgICAgICAgPGludD4gODUsIDc4LCA4NywgOTEsIDc2LCBOQSwgOTcsIE5BLCBOQSwgNzAsIDc4LCA3NiwgTkEsIDg4LCA2NSwg4oCmXG4kIHNob290aW5nICAgICAgICAgICAgICAgICAgICA8aW50PiA5MiwgOTIsIDk0LCA4MywgODYsIE5BLCA4OCwgTkEsIE5BLCA5MSwgNjYsIDg2LCBOQSwgODcsIDczLCDigKZcbiQgcGFzc2luZyAgICAgICAgICAgICAgICAgICAgIDxpbnQ+IDkxLCA3OSwgODAsIDg2LCA5MywgTkEsIDgwLCBOQSwgTkEsIDgzLCA3NSwgODEsIE5BLCA4MiwgNzYsIOKAplxuJCBkcmliYmxpbmcgICAgICAgICAgICAgICAgICAgPGludD4gOTUsIDg2LCA4OCwgOTQsIDg4LCBOQSwgOTIsIE5BLCBOQSwgODMsIDgyLCA4NywgTkEsIDg2LCA3Mywg4oCmXG4kIGRlZmVuZGluZyAgICAgICAgICAgICAgICAgICA8aW50PiAzNCwgNDQsIDM0LCAzNywgNjQsIE5BLCAzNiwgTkEsIE5BLCA0NywgODcsIDM5LCBOQSwgNDMsIDg2LCDigKZcbiQgcGh5c2ljICAgICAgICAgICAgICAgICAgICAgIDxpbnQ+IDY1LCA4MiwgNzUsIDYzLCA3OCwgTkEsIDc3LCBOQSwgTkEsIDgzLCA4MywgNzcsIE5BLCA2OSwgOTAsIOKAplxuJCBhdHRhY2tpbmdfY3Jvc3NpbmcgICAgICAgICAgPGludD4gODUsIDcxLCA4NywgODUsIDk0LCAxMywgNzgsIDE1LCAxOCwgODAsIDY4LCA3NSwgMTQsIDgzLCA1OCwg4oCmXG4kIGF0dGFja2luZ19maW5pc2hpbmcgICAgICAgICA8aW50PiA5NSwgOTUsIDk1LCA4MywgODIsIDExLCA5MywgMTMsIDE0LCA5NCwgNjUsIDkwLCAxNCwgODgsIDY0LCDigKZcbiQgYXR0YWNraW5nX2hlYWRpbmdfYWNjdXJhY3kgIDxpbnQ+IDcwLCA5MCwgOTAsIDYzLCA1NSwgMTUsIDcyLCAyNSwgMTEsIDg2LCA1NCwgODksIDEzLCA2OCwgNzksIOKAplxuJCBhdHRhY2tpbmdfc2hvcnRfcGFzc2luZyAgICAgPGludD4gOTEsIDg1LCA4MCwgODYsIDk0LCA0MywgODUsIDYwLCA2MSwgODUsIDgyLCA4NiwgMzMsIDg0LCA4NCwg4oCmXG4kIGF0dGFja2luZ192b2xsZXlzICAgICAgICAgICA8aW50PiA4OCwgODksIDg2LCA4NiwgODIsIDEzLCA4MywgMTEsIDE0LCA4OCwgNTYsIDg2LCAxMiwgNzgsIDYyLCDigKZcbiQgc2tpbGxfZHJpYmJsaW5nICAgICAgICAgICAgIDxpbnQ+IDk2LCA4NSwgODgsIDk1LCA4OCwgMTIsIDkzLCAzMCwgMjEsIDgzLCA3OSwgODcsIDEzLCA4NywgNjksIOKAplxuJCBza2lsbF9jdXJ2ZSAgICAgICAgICAgICAgICAgPGludD4gOTMsIDc5LCA4MSwgODgsIDg1LCAxMywgODAsIDE0LCAxOCwgODMsIDQ5LCA4MSwgMTksIDg1LCA2Miwg4oCmXG4kIHNraWxsX2ZrX2FjY3VyYWN5ICAgICAgICAgICA8aW50PiA5NCwgODUsIDg0LCA4NywgODMsIDE0LCA2OSwgMTEsIDEyLCA2NSwgNDksIDczLCAyMCwgNzQsIDc0LCDigKZcbiQgc2tpbGxfbG9uZ19wYXNzaW5nICAgICAgICAgIDxpbnQ+IDkxLCA3MCwgNzcsIDgxLCA5MywgNDAsIDcxLCA2OCwgNjMsIDg2LCA3OSwgNzMsIDM1LCA3NCwgODQsIOKAplxuJCBza2lsbF9iYWxsX2NvbnRyb2wgICAgICAgICAgPGludD4gOTYsIDg4LCA4OCwgOTUsIDkxLCAzMCwgOTEsIDQ2LCAzMCwgODUsIDgxLCA5MCwgMjMsIDg0LCA3OSwg4oCmXG4kIG1vdmVtZW50X2FjY2VsZXJhdGlvbiAgICAgICA8aW50PiA5MSwgNzcsIDg1LCA5MywgNzYsIDQzLCA5NywgNTQsIDM4LCA2NSwgODIsIDc3LCA0MiwgODUsIDYwLCDigKZcbiQgbW92ZW1lbnRfc3ByaW50X3NwZWVkICAgICAgIDxpbnQ+IDgwLCA3OSwgODgsIDg5LCA3NiwgNjAsIDk3LCA2MCwgNTAsIDc0LCA3NSwgNzUsIDUyLCA5MCwgNjksIOKAplxuJCBtb3ZlbWVudF9hZ2lsaXR5ICAgICAgICAgICAgPGludD4gOTEsIDc3LCA4NiwgOTYsIDc5LCA2NywgOTIsIDUxLCAzOSwgNzEsIDgyLCA3OSwgNjIsIDg2LCA2MSwg4oCmXG4kIG1vdmVtZW50X3JlYWN0aW9ucyAgICAgICAgICA8aW50PiA5NCwgOTMsIDk0LCA4OSwgOTEsIDg4LCA5MywgODcsIDg2LCA5MiwgOTMsIDkxLCA4NCwgOTEsIDg3LCDigKZcbiQgbW92ZW1lbnRfYmFsYW5jZSAgICAgICAgICAgIDxpbnQ+IDk1LCA4MiwgNzQsIDg0LCA3OCwgNDksIDgzLCAzNSwgNDMsIDcwLCA5MiwgNzIsIDQ1LCA3OCwgNjYsIOKAplxuJCBwb3dlcl9zaG90X3Bvd2VyICAgICAgICAgICAgPGludD4gODYsIDkwLCA5NCwgODAsIDkxLCA1OSwgODYsIDY4LCA2NiwgOTEsIDcxLCA4NSwgNTYsIDg4LCA4OCwg4oCmXG4kIHBvd2VyX2p1bXBpbmcgICAgICAgICAgICAgICA8aW50PiA2OCwgODUsIDk1LCA2NCwgNjMsIDc4LCA3OCwgNzcsIDc5LCA3OSwgNzcsIDc5LCA2OCwgNjAsIDg3LCDigKZcbiQgcG93ZXJfc3RhbWluYSAgICAgICAgICAgICAgIDxpbnQ+IDcyLCA3NiwgNzcsIDgxLCA4OSwgNDEsIDg4LCA0MywgMzUsIDgzLCA5NywgNzgsIDM4LCA4OCwgODksIOKAplxuJCBwb3dlcl9zdHJlbmd0aCAgICAgICAgICAgICAgPGludD4gNjksIDg2LCA3NywgNTMsIDc0LCA3OCwgNzcsIDgwLCA3OCwgODUsIDcyLCA4MiwgNzAsIDY0LCA5MCwg4oCmXG4kIHBvd2VyX2xvbmdfc2hvdHMgICAgICAgICAgICA8aW50PiA5NCwgODcsIDkzLCA4MSwgOTEsIDEyLCA4MiwgMTYsIDEwLCA4NiwgNjUsIDc5LCAxNywgODksIDgxLCDigKZcbiQgbWVudGFsaXR5X2FnZ3Jlc3Npb24gICAgICAgIDxpbnQ+IDQ0LCA4MSwgNjMsIDYzLCA3NiwgMzQsIDYyLCAyOSwgNDMsIDgwLCA5MywgNjMsIDIzLCA2MiwgOTEsIOKAplxuJCBtZW50YWxpdHlfaW50ZXJjZXB0aW9ucyAgICAgPGludD4gNDAsIDQ5LCAyOSwgMzcsIDY2LCAxOSwgMzgsIDMwLCAyMiwgNDQsIDkxLCAzOSwgMTUsIDM5LCA4Nywg4oCmXG4kIG1lbnRhbGl0eV9wb3NpdGlvbmluZyAgICAgICA8aW50PiA5MywgOTUsIDk1LCA4NiwgODgsIDExLCA5MiwgMTIsIDExLCA5NCwgNzIsIDkwLCAxMywgOTEsIDc1LCDigKZcbiQgbWVudGFsaXR5X3Zpc2lvbiAgICAgICAgICAgIDxpbnQ+IDk1LCA4MSwgNzYsIDkwLCA5NCwgNjUsIDgyLCA3MCwgNzAsIDg3LCA3OCwgODcsIDQ0LCA4MywgODAsIOKAplxuJCBtZW50YWxpdHlfcGVuYWx0aWVzICAgICAgICAgPGludD4gNzUsIDkwLCA4OCwgOTMsIDgzLCAxMSwgNzksIDQ3LCAyNSwgOTEsIDU0LCA4NCwgMjcsIDczLCA2Niwg4oCmXG4kIG1lbnRhbGl0eV9jb21wb3N1cmUgICAgICAgICA8aW50PiA5NiwgODgsIDk1LCA5MywgODksIDY4LCA4OCwgNzAsIDcwLCA5MSwgODQsIDkwLCA2NiwgODksIDg0LCDigKZcbiQgZGVmZW5kaW5nX21hcmtpbmdfYXdhcmVuZXNzIDxpbnQ+IDIwLCAzNSwgMjQsIDM1LCA2OCwgMjcsIDI2LCAxNywgMjUsIDUwLCA5MCwgNDMsIDIwLCA1MCwgODUsIOKAplxuJCBkZWZlbmRpbmdfc3RhbmRpbmdfdGFja2xlICAgPGludD4gMzUsIDQyLCAzMiwgMzIsIDY1LCAxMiwgMzQsIDEwLCAxMywgMzYsIDkzLCAyNCwgMTgsIDM0LCA4OCwg4oCmXG4kIGRlZmVuZGluZ19zbGlkaW5nX3RhY2tsZSAgICA8aW50PiAyNCwgMTksIDI0LCAyOSwgNTMsIDE4LCAzMiwgMTEsIDEwLCAzOCwgODYsIDE4LCAxNiwgMzMsIDg3LCDigKZcbiQgZ29hbGtlZXBpbmdfZGl2aW5nICAgICAgICAgIDxpbnQ+IDYsIDE1LCA3LCA5LCAxNSwgODcsIDEzLCA4OCwgODgsIDgsIDE1LCAxMywgODQsIDExLCAxMywgMTMsIOKAplxuJCBnb2Fsa2VlcGluZ19oYW5kbGluZyAgICAgICAgPGludD4gMTEsIDYsIDExLCA5LCAxMywgOTIsIDUsIDg4LCA4NSwgMTAsIDEyLCAxMSwgODksIDEzLCAxNCwgMTAs4oCmXG4kIGdvYWxrZWVwaW5nX2tpY2tpbmcgICAgICAgICA8aW50PiAxNSwgMTIsIDE1LCAxNSwgNSwgNzgsIDcsIDkxLCA4OCwgMTEsIDEwLCA1LCA3NCwgMTMsIDE2LCAxMyzigKZcbiQgZ29hbGtlZXBpbmdfcG9zaXRpb25pbmcgICAgIDxpbnQ+IDE0LCA4LCAxNCwgMTUsIDEwLCA5MCwgMTEsIDg5LCA4OCwgMTQsIDcsIDUsIDg2LCA2LCAxMiwgMTEsIOKAplxuJCBnb2Fsa2VlcGluZ19yZWZsZXhlcyAgICAgICAgPGludD4gOCwgMTAsIDExLCAxMSwgMTMsIDkwLCA2LCA4OCwgOTAsIDExLCAxMCwgNywgODgsIDEwLCAxMiwgMTEs4oCmXG4kIGdvYWxrZWVwaW5nX3NwZWVkICAgICAgICAgICA8aW50PiBOQSwgTkEsIE5BLCBOQSwgTkEsIDUwLCBOQSwgNTYsIDQzLCBOQSwgTkEsIE5BLCA0NiwgTkEsIE5BLCDigKZcbiQgbHMgICAgICAgICAgICAgICAgICAgICAgICAgIDxjaHI+IFwiODkrM1wiLCBcIjkwKzJcIiwgXCI5MCsxXCIsIFwiODMrM1wiLCBcIjgzKzNcIiwgXCIzMyszXCIsIFwiODkrM1wiLCBcIjQwK+KAplxuJCBzdCAgICAgICAgICAgICAgICAgICAgICAgICAgPGNocj4gXCI4OSszXCIsIFwiOTArMlwiLCBcIjkwKzFcIiwgXCI4MyszXCIsIFwiODMrM1wiLCBcIjMzKzNcIiwgXCI4OSszXCIsIFwiNDAr4oCmXG4kIHJzICAgICAgICAgICAgICAgICAgICAgICAgICA8Y2hyPiBcIjg5KzNcIiwgXCI5MCsyXCIsIFwiOTArMVwiLCBcIjgzKzNcIiwgXCI4MyszXCIsIFwiMzMrM1wiLCBcIjg5KzNcIiwgXCI0MCvigKZcbiQgbHcgICAgICAgICAgICAgICAgICAgICAgICAgIDxjaHI+IFwiOTJcIiwgXCI4NVwiLCBcIjg4XCIsIFwiOTBcIiwgXCI4OFwiLCBcIjMyXCIsIFwiOTBcIiwgXCI0MFwiLCBcIjM1XCIsIFwiODRcIiwg4oCmXG4kIGxmICAgICAgICAgICAgICAgICAgICAgICAgICA8Y2hyPiBcIjkzXCIsIFwiODhcIiwgXCI4OVwiLCBcIjg4XCIsIFwiODdcIiwgXCIzNVwiLCBcIjkwXCIsIFwiNDNcIiwgXCIzOFwiLCBcIjg2XCIsIOKAplxuJCBjZiAgICAgICAgICAgICAgICAgICAgICAgICAgPGNocj4gXCI5M1wiLCBcIjg4XCIsIFwiODlcIiwgXCI4OFwiLCBcIjg3XCIsIFwiMzVcIiwgXCI5MFwiLCBcIjQzXCIsIFwiMzhcIiwgXCI4NlwiLCDigKZcbiQgcmYgICAgICAgICAgICAgICAgICAgICAgICAgIDxjaHI+IFwiOTNcIiwgXCI4OFwiLCBcIjg5XCIsIFwiODhcIiwgXCI4N1wiLCBcIjM1XCIsIFwiOTBcIiwgXCI0M1wiLCBcIjM4XCIsIFwiODZcIiwg4oCmXG4kIHJ3ICAgICAgICAgICAgICAgICAgICAgICAgICA8Y2hyPiBcIjkyXCIsIFwiODVcIiwgXCI4OFwiLCBcIjkwXCIsIFwiODhcIiwgXCIzMlwiLCBcIjkwXCIsIFwiNDBcIiwgXCIzNVwiLCBcIjg0XCIsIOKAplxuJCBsYW0gICAgICAgICAgICAgICAgICAgICAgICAgPGNocj4gXCI5M1wiLCBcIjg2KzNcIiwgXCI4NiszXCIsIFwiODkrMlwiLCBcIjg5KzJcIiwgXCIzOCszXCIsIFwiODkrM1wiLCBcIjQ3KzNcIuKAplxuJCBjYW0gICAgICAgICAgICAgICAgICAgICAgICAgPGNocj4gXCI5M1wiLCBcIjg2KzNcIiwgXCI4NiszXCIsIFwiODkrMlwiLCBcIjg5KzJcIiwgXCIzOCszXCIsIFwiODkrM1wiLCBcIjQ3KzNcIuKAplxuJCByYW0gICAgICAgICAgICAgICAgICAgICAgICAgPGNocj4gXCI5M1wiLCBcIjg2KzNcIiwgXCI4NiszXCIsIFwiODkrMlwiLCBcIjg5KzJcIiwgXCIzOCszXCIsIFwiODkrM1wiLCBcIjQ3KzNcIuKAplxuJCBsbSAgICAgICAgICAgICAgICAgICAgICAgICAgPGNocj4gXCI5MSsyXCIsIFwiODQrM1wiLCBcIjg2KzNcIiwgXCI4OSsyXCIsIFwiODkrMlwiLCBcIjM1KzNcIiwgXCI4OSszXCIsIFwiNDQr4oCmXG4kIGxjbSAgICAgICAgICAgICAgICAgICAgICAgICA8Y2hyPiBcIjg3KzNcIiwgXCI4MCszXCIsIFwiNzgrM1wiLCBcIjgyKzNcIiwgXCI4OSsyXCIsIFwiMzgrM1wiLCBcIjgxKzNcIiwgXCI1MCvigKZcbiQgY20gICAgICAgICAgICAgICAgICAgICAgICAgIDxjaHI+IFwiODcrM1wiLCBcIjgwKzNcIiwgXCI3OCszXCIsIFwiODIrM1wiLCBcIjg5KzJcIiwgXCIzOCszXCIsIFwiODErM1wiLCBcIjUwK+KAplxuJCByY20gICAgICAgICAgICAgICAgICAgICAgICAgPGNocj4gXCI4NyszXCIsIFwiODArM1wiLCBcIjc4KzNcIiwgXCI4MiszXCIsIFwiODkrMlwiLCBcIjM4KzNcIiwgXCI4MSszXCIsIFwiNTAr4oCmXG4kIHJtICAgICAgICAgICAgICAgICAgICAgICAgICA8Y2hyPiBcIjkxKzJcIiwgXCI4NCszXCIsIFwiODYrM1wiLCBcIjg5KzJcIiwgXCI4OSsyXCIsIFwiMzUrM1wiLCBcIjg5KzNcIiwgXCI0NCvigKZcbiQgbHdiICAgICAgICAgICAgICAgICAgICAgICAgIDxjaHI+IFwiNjYrM1wiLCBcIjY0KzNcIiwgXCI2MyszXCIsIFwiNjcrM1wiLCBcIjc5KzNcIiwgXCIzMiszXCIsIFwiNjcrM1wiLCBcIjM3K+KAplxuJCBsZG0gICAgICAgICAgICAgICAgICAgICAgICAgPGNocj4gXCI2NCszXCIsIFwiNjYrM1wiLCBcIjU5KzNcIiwgXCI2MyszXCIsIFwiODArM1wiLCBcIjM2KzNcIiwgXCI2MyszXCIsIFwiNDMr4oCmXG4kIGNkbSAgICAgICAgICAgICAgICAgICAgICAgICA8Y2hyPiBcIjY0KzNcIiwgXCI2NiszXCIsIFwiNTkrM1wiLCBcIjYzKzNcIiwgXCI4MCszXCIsIFwiMzYrM1wiLCBcIjYzKzNcIiwgXCI0MyvigKZcbiQgcmRtICAgICAgICAgICAgICAgICAgICAgICAgIDxjaHI+IFwiNjQrM1wiLCBcIjY2KzNcIiwgXCI1OSszXCIsIFwiNjMrM1wiLCBcIjgwKzNcIiwgXCIzNiszXCIsIFwiNjMrM1wiLCBcIjQzK+KAplxuJCByd2IgICAgICAgICAgICAgICAgICAgICAgICAgPGNocj4gXCI2NiszXCIsIFwiNjQrM1wiLCBcIjYzKzNcIiwgXCI2NyszXCIsIFwiNzkrM1wiLCBcIjMyKzNcIiwgXCI2NyszXCIsIFwiMzcr4oCmXG4kIGxiICAgICAgICAgICAgICAgICAgICAgICAgICA8Y2hyPiBcIjYxKzNcIiwgXCI2MSszXCIsIFwiNjArM1wiLCBcIjYyKzNcIiwgXCI3NSszXCIsIFwiMzIrM1wiLCBcIjYzKzNcIiwgXCIzNSvigKZcbiQgbGNiICAgICAgICAgICAgICAgICAgICAgICAgIDxjaHI+IFwiNTArM1wiLCBcIjYwKzNcIiwgXCI1MyszXCIsIFwiNTArM1wiLCBcIjY5KzNcIiwgXCIzMyszXCIsIFwiNTQrM1wiLCBcIjM0K+KAplxuJCBjYiAgICAgICAgICAgICAgICAgICAgICAgICAgPGNocj4gXCI1MCszXCIsIFwiNjArM1wiLCBcIjUzKzNcIiwgXCI1MCszXCIsIFwiNjkrM1wiLCBcIjMzKzNcIiwgXCI1NCszXCIsIFwiMzQr4oCmXG4kIHJjYiAgICAgICAgICAgICAgICAgICAgICAgICA8Y2hyPiBcIjUwKzNcIiwgXCI2MCszXCIsIFwiNTMrM1wiLCBcIjUwKzNcIiwgXCI2OSszXCIsIFwiMzMrM1wiLCBcIjU0KzNcIiwgXCIzNCvigKZcbiQgcmIgICAgICAgICAgICAgICAgICAgICAgICAgIDxjaHI+IFwiNjErM1wiLCBcIjYxKzNcIiwgXCI2MCszXCIsIFwiNjIrM1wiLCBcIjc1KzNcIiwgXCIzMiszXCIsIFwiNjMrM1wiLCBcIjM1K+KAplxuJCBnayAgICAgICAgICAgICAgICAgICAgICAgICAgPGNocj4gXCIxOSszXCIsIFwiMTkrM1wiLCBcIjIwKzNcIiwgXCIyMCszXCIsIFwiMjErM1wiLCBcIjg5KzNcIiwgXCIxOCszXCIsIFwiODgr4oCmXG4kIHBsYXllcl9mYWNlX3VybCAgICAgICAgICAgICA8Y2hyPiBcImh0dHBzOi8vY2RuLnNvZmlmYS5uZXQvcGxheWVycy8xNTgvMDIzLzIyXzEyMC5wbmdcIiwgXCJodHRwczrigKZcbiQgY2x1Yl9sb2dvX3VybCAgICAgICAgICAgICAgIDxjaHI+IFwiaHR0cHM6Ly9jZG4uc29maWZhLm5ldC90ZWFtcy83My82MC5wbmdcIiwgXCJodHRwczovL2Nkbi5zb2ZpZuKAplxuJCBjbHViX2ZsYWdfdXJsICAgICAgICAgICAgICAgPGNocj4gXCJodHRwczovL2Nkbi5zb2ZpZmEubmV0L2ZsYWdzL2ZyLnBuZ1wiLCBcImh0dHBzOi8vY2RuLnNvZmlmYS5u4oCmXG4kIG5hdGlvbl9sb2dvX3VybCAgICAgICAgICAgICA8Y2hyPiBcImh0dHBzOi8vY2RuLnNvZmlmYS5uZXQvdGVhbXMvMTM2OS82MC5wbmdcIiwgXCJodHRwczovL2Nkbi5zb2bigKZcbiQgbmF0aW9uX2ZsYWdfdXJsICAgICAgICAgICAgIDxjaHI+IFwiaHR0cHM6Ly9jZG4uc29maWZhLm5ldC9mbGFncy9hci5wbmdcIiwgXCJodHRwczovL2Nkbi5zb2ZpZmEubuKAplxuIn0= -->
+<pre><code>Rows: 19,239
+Columns: 110
+$ sofifa_id                   &lt;int&gt; 158023, 188545, 20801, 190871, 192985, 200389, 231747, 16749…
+$ player_url                  &lt;chr&gt; &quot;https://sofifa.com/player/158023/lionel-messi/220002&quot;, &quot;htt…
+$ short_name                  &lt;chr&gt; &quot;L. Messi&quot;, &quot;R. Lewandowski&quot;, &quot;Cristiano Ronaldo&quot;, &quot;Neymar J…
+$ long_name                   &lt;chr&gt; &quot;Lionel Andrés Messi Cuccittini&quot;, &quot;Robert Lewandowski&quot;, &quot;Cri…
+$ player_positions            &lt;chr&gt; &quot;RW, ST, CF&quot;, &quot;ST&quot;, &quot;ST, LW&quot;, &quot;LW, CAM&quot;, &quot;CM, CAM&quot;, &quot;GK&quot;, &quot;S…
+$ overall                     &lt;int&gt; 93, 92, 91, 91, 91, 91, 91, 90, 90, 90, 90, 89, 89, 89, 89, …
+$ potential                   &lt;int&gt; 93, 92, 91, 91, 91, 93, 95, 90, 92, 90, 90, 89, 91, 89, 89, …
+$ value_eur                   &lt;dbl&gt; 78000000, 119500000, 45000000, 129000000, 125500000, 1120000…
+$ wage_eur                    &lt;dbl&gt; 320000, 270000, 270000, 270000, 350000, 130000, 230000, 8600…
+$ age                         &lt;int&gt; 34, 32, 36, 29, 30, 28, 22, 35, 29, 27, 30, 33, 29, 28, 29, …
+$ dob                         &lt;chr&gt; &quot;1987-06-24&quot;, &quot;1988-08-21&quot;, &quot;1985-02-05&quot;, &quot;1992-02-05&quot;, &quot;199…
+$ height_cm                   &lt;int&gt; 170, 185, 187, 175, 181, 188, 182, 193, 187, 188, 168, 185, …
+$ weight_kg                   &lt;int&gt; 72, 81, 83, 68, 70, 87, 73, 93, 85, 89, 70, 81, 96, 78, 84, …
+$ club_team_id                &lt;dbl&gt; 73, 21, 11, 73, 10, 240, 73, 21, 241, 18, 5, 243, 243, 18, 2…
+$ club_name                   &lt;chr&gt; &quot;Paris Saint-Germain&quot;, &quot;FC Bayern München&quot;, &quot;Manchester Unit…
+$ league_name                 &lt;chr&gt; &quot;French Ligue 1&quot;, &quot;German 1. Bundesliga&quot;, &quot;English Premier L…
+$ league_level                &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+$ club_position               &lt;chr&gt; &quot;RW&quot;, &quot;ST&quot;, &quot;ST&quot;, &quot;LW&quot;, &quot;RCM&quot;, &quot;GK&quot;, &quot;ST&quot;, &quot;GK&quot;, &quot;GK&quot;, &quot;ST&quot;,…
+$ club_jersey_number          &lt;int&gt; 30, 9, 7, 10, 17, 13, 7, 1, 1, 10, 7, 9, 1, 7, 14, 4, 10, 11…
+$ club_loaned_from            &lt;chr&gt; &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, …
+$ club_joined                 &lt;chr&gt; &quot;2021-08-10&quot;, &quot;2014-07-01&quot;, &quot;2021-08-27&quot;, &quot;2017-08-03&quot;, &quot;201…
+$ club_contract_valid_until   &lt;int&gt; 2023, 2023, 2023, 2025, 2025, 2023, 2022, 2023, 2025, 2024, …
+$ nationality_id              &lt;int&gt; 52, 37, 38, 54, 7, 44, 18, 21, 21, 14, 18, 18, 7, 167, 54, 3…
+$ nationality_name            &lt;chr&gt; &quot;Argentina&quot;, &quot;Poland&quot;, &quot;Portugal&quot;, &quot;Brazil&quot;, &quot;Belgium&quot;, &quot;Slo…
+$ nation_team_id              &lt;dbl&gt; 1369, 1353, 1354, NA, 1325, NA, 1335, 1337, NA, 1318, 1335, …
+$ nation_position             &lt;chr&gt; &quot;RW&quot;, &quot;RS&quot;, &quot;ST&quot;, &quot;&quot;, &quot;RCM&quot;, &quot;&quot;, &quot;LW&quot;, &quot;GK&quot;, &quot;&quot;, &quot;ST&quot;, &quot;CDM&quot;…
+$ nation_jersey_number        &lt;int&gt; 10, 9, 7, NA, 7, NA, 10, 1, NA, 9, 13, 19, 1, NA, NA, 4, NA,…
+$ preferred_foot              &lt;chr&gt; &quot;Left&quot;, &quot;Right&quot;, &quot;Right&quot;, &quot;Right&quot;, &quot;Right&quot;, &quot;Right&quot;, &quot;Right&quot;…
+$ weak_foot                   &lt;int&gt; 4, 4, 4, 5, 5, 3, 4, 4, 4, 5, 3, 4, 3, 5, 3, 3, 4, 3, 3, 4, …
+$ skill_moves                 &lt;int&gt; 4, 4, 5, 5, 4, 1, 5, 1, 1, 3, 2, 4, 1, 4, 2, 2, 4, 4, 1, 3, …
+$ international_reputation    &lt;int&gt; 5, 5, 5, 5, 4, 5, 4, 5, 4, 4, 4, 4, 4, 4, 3, 4, 4, 4, 3, 4, …
+$ work_rate                   &lt;chr&gt; &quot;Medium/Low&quot;, &quot;High/Medium&quot;, &quot;High/Low&quot;, &quot;High/Medium&quot;, &quot;Hig…
+$ body_type                   &lt;chr&gt; &quot;Unique&quot;, &quot;Unique&quot;, &quot;Unique&quot;, &quot;Unique&quot;, &quot;Unique&quot;, &quot;Unique&quot;, …
+$ real_face                   &lt;chr&gt; &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes…
+$ release_clause_eur          &lt;int&gt; 144300000, 197200000, 83300000, 238700000, 232200000, 238000…
+$ player_tags                 &lt;chr&gt; &quot;#Dribbler, #Distance Shooter, #FK Specialist, #Acrobat, #Cl…
+$ player_traits               &lt;chr&gt; &quot;Finesse Shot, Long Shot Taker (AI), Playmaker (AI), Outside…
+$ pace                        &lt;int&gt; 85, 78, 87, 91, 76, NA, 97, NA, NA, 70, 78, 76, NA, 88, 65, …
+$ shooting                    &lt;int&gt; 92, 92, 94, 83, 86, NA, 88, NA, NA, 91, 66, 86, NA, 87, 73, …
+$ passing                     &lt;int&gt; 91, 79, 80, 86, 93, NA, 80, NA, NA, 83, 75, 81, NA, 82, 76, …
+$ dribbling                   &lt;int&gt; 95, 86, 88, 94, 88, NA, 92, NA, NA, 83, 82, 87, NA, 86, 73, …
+$ defending                   &lt;int&gt; 34, 44, 34, 37, 64, NA, 36, NA, NA, 47, 87, 39, NA, 43, 86, …
+$ physic                      &lt;int&gt; 65, 82, 75, 63, 78, NA, 77, NA, NA, 83, 83, 77, NA, 69, 90, …
+$ attacking_crossing          &lt;int&gt; 85, 71, 87, 85, 94, 13, 78, 15, 18, 80, 68, 75, 14, 83, 58, …
+$ attacking_finishing         &lt;int&gt; 95, 95, 95, 83, 82, 11, 93, 13, 14, 94, 65, 90, 14, 88, 64, …
+$ attacking_heading_accuracy  &lt;int&gt; 70, 90, 90, 63, 55, 15, 72, 25, 11, 86, 54, 89, 13, 68, 79, …
+$ attacking_short_passing     &lt;int&gt; 91, 85, 80, 86, 94, 43, 85, 60, 61, 85, 82, 86, 33, 84, 84, …
+$ attacking_volleys           &lt;int&gt; 88, 89, 86, 86, 82, 13, 83, 11, 14, 88, 56, 86, 12, 78, 62, …
+$ skill_dribbling             &lt;int&gt; 96, 85, 88, 95, 88, 12, 93, 30, 21, 83, 79, 87, 13, 87, 69, …
+$ skill_curve                 &lt;int&gt; 93, 79, 81, 88, 85, 13, 80, 14, 18, 83, 49, 81, 19, 85, 62, …
+$ skill_fk_accuracy           &lt;int&gt; 94, 85, 84, 87, 83, 14, 69, 11, 12, 65, 49, 73, 20, 74, 74, …
+$ skill_long_passing          &lt;int&gt; 91, 70, 77, 81, 93, 40, 71, 68, 63, 86, 79, 73, 35, 74, 84, …
+$ skill_ball_control          &lt;int&gt; 96, 88, 88, 95, 91, 30, 91, 46, 30, 85, 81, 90, 23, 84, 79, …
+$ movement_acceleration       &lt;int&gt; 91, 77, 85, 93, 76, 43, 97, 54, 38, 65, 82, 77, 42, 85, 60, …
+$ movement_sprint_speed       &lt;int&gt; 80, 79, 88, 89, 76, 60, 97, 60, 50, 74, 75, 75, 52, 90, 69, …
+$ movement_agility            &lt;int&gt; 91, 77, 86, 96, 79, 67, 92, 51, 39, 71, 82, 79, 62, 86, 61, …
+$ movement_reactions          &lt;int&gt; 94, 93, 94, 89, 91, 88, 93, 87, 86, 92, 93, 91, 84, 91, 87, …
+$ movement_balance            &lt;int&gt; 95, 82, 74, 84, 78, 49, 83, 35, 43, 70, 92, 72, 45, 78, 66, …
+$ power_shot_power            &lt;int&gt; 86, 90, 94, 80, 91, 59, 86, 68, 66, 91, 71, 85, 56, 88, 88, …
+$ power_jumping               &lt;int&gt; 68, 85, 95, 64, 63, 78, 78, 77, 79, 79, 77, 79, 68, 60, 87, …
+$ power_stamina               &lt;int&gt; 72, 76, 77, 81, 89, 41, 88, 43, 35, 83, 97, 78, 38, 88, 89, …
+$ power_strength              &lt;int&gt; 69, 86, 77, 53, 74, 78, 77, 80, 78, 85, 72, 82, 70, 64, 90, …
+$ power_long_shots            &lt;int&gt; 94, 87, 93, 81, 91, 12, 82, 16, 10, 86, 65, 79, 17, 89, 81, …
+$ mentality_aggression        &lt;int&gt; 44, 81, 63, 63, 76, 34, 62, 29, 43, 80, 93, 63, 23, 62, 91, …
+$ mentality_interceptions     &lt;int&gt; 40, 49, 29, 37, 66, 19, 38, 30, 22, 44, 91, 39, 15, 39, 87, …
+$ mentality_positioning       &lt;int&gt; 93, 95, 95, 86, 88, 11, 92, 12, 11, 94, 72, 90, 13, 91, 75, …
+$ mentality_vision            &lt;int&gt; 95, 81, 76, 90, 94, 65, 82, 70, 70, 87, 78, 87, 44, 83, 80, …
+$ mentality_penalties         &lt;int&gt; 75, 90, 88, 93, 83, 11, 79, 47, 25, 91, 54, 84, 27, 73, 66, …
+$ mentality_composure         &lt;int&gt; 96, 88, 95, 93, 89, 68, 88, 70, 70, 91, 84, 90, 66, 89, 84, …
+$ defending_marking_awareness &lt;int&gt; 20, 35, 24, 35, 68, 27, 26, 17, 25, 50, 90, 43, 20, 50, 85, …
+$ defending_standing_tackle   &lt;int&gt; 35, 42, 32, 32, 65, 12, 34, 10, 13, 36, 93, 24, 18, 34, 88, …
+$ defending_sliding_tackle    &lt;int&gt; 24, 19, 24, 29, 53, 18, 32, 11, 10, 38, 86, 18, 16, 33, 87, …
+$ goalkeeping_diving          &lt;int&gt; 6, 15, 7, 9, 15, 87, 13, 88, 88, 8, 15, 13, 84, 11, 13, 13, …
+$ goalkeeping_handling        &lt;int&gt; 11, 6, 11, 9, 13, 92, 5, 88, 85, 10, 12, 11, 89, 13, 14, 10,…
+$ goalkeeping_kicking         &lt;int&gt; 15, 12, 15, 15, 5, 78, 7, 91, 88, 11, 10, 5, 74, 13, 16, 13,…
+$ goalkeeping_positioning     &lt;int&gt; 14, 8, 14, 15, 10, 90, 11, 89, 88, 14, 7, 5, 86, 6, 12, 11, …
+$ goalkeeping_reflexes        &lt;int&gt; 8, 10, 11, 11, 13, 90, 6, 88, 90, 11, 10, 7, 88, 10, 12, 11,…
+$ goalkeeping_speed           &lt;int&gt; NA, NA, NA, NA, NA, 50, NA, 56, 43, NA, NA, NA, 46, NA, NA, …
+$ ls                          &lt;chr&gt; &quot;89+3&quot;, &quot;90+2&quot;, &quot;90+1&quot;, &quot;83+3&quot;, &quot;83+3&quot;, &quot;33+3&quot;, &quot;89+3&quot;, &quot;40+…
+$ st                          &lt;chr&gt; &quot;89+3&quot;, &quot;90+2&quot;, &quot;90+1&quot;, &quot;83+3&quot;, &quot;83+3&quot;, &quot;33+3&quot;, &quot;89+3&quot;, &quot;40+…
+$ rs                          &lt;chr&gt; &quot;89+3&quot;, &quot;90+2&quot;, &quot;90+1&quot;, &quot;83+3&quot;, &quot;83+3&quot;, &quot;33+3&quot;, &quot;89+3&quot;, &quot;40+…
+$ lw                          &lt;chr&gt; &quot;92&quot;, &quot;85&quot;, &quot;88&quot;, &quot;90&quot;, &quot;88&quot;, &quot;32&quot;, &quot;90&quot;, &quot;40&quot;, &quot;35&quot;, &quot;84&quot;, …
+$ lf                          &lt;chr&gt; &quot;93&quot;, &quot;88&quot;, &quot;89&quot;, &quot;88&quot;, &quot;87&quot;, &quot;35&quot;, &quot;90&quot;, &quot;43&quot;, &quot;38&quot;, &quot;86&quot;, …
+$ cf                          &lt;chr&gt; &quot;93&quot;, &quot;88&quot;, &quot;89&quot;, &quot;88&quot;, &quot;87&quot;, &quot;35&quot;, &quot;90&quot;, &quot;43&quot;, &quot;38&quot;, &quot;86&quot;, …
+$ rf                          &lt;chr&gt; &quot;93&quot;, &quot;88&quot;, &quot;89&quot;, &quot;88&quot;, &quot;87&quot;, &quot;35&quot;, &quot;90&quot;, &quot;43&quot;, &quot;38&quot;, &quot;86&quot;, …
+$ rw                          &lt;chr&gt; &quot;92&quot;, &quot;85&quot;, &quot;88&quot;, &quot;90&quot;, &quot;88&quot;, &quot;32&quot;, &quot;90&quot;, &quot;40&quot;, &quot;35&quot;, &quot;84&quot;, …
+$ lam                         &lt;chr&gt; &quot;93&quot;, &quot;86+3&quot;, &quot;86+3&quot;, &quot;89+2&quot;, &quot;89+2&quot;, &quot;38+3&quot;, &quot;89+3&quot;, &quot;47+3&quot;…
+$ cam                         &lt;chr&gt; &quot;93&quot;, &quot;86+3&quot;, &quot;86+3&quot;, &quot;89+2&quot;, &quot;89+2&quot;, &quot;38+3&quot;, &quot;89+3&quot;, &quot;47+3&quot;…
+$ ram                         &lt;chr&gt; &quot;93&quot;, &quot;86+3&quot;, &quot;86+3&quot;, &quot;89+2&quot;, &quot;89+2&quot;, &quot;38+3&quot;, &quot;89+3&quot;, &quot;47+3&quot;…
+$ lm                          &lt;chr&gt; &quot;91+2&quot;, &quot;84+3&quot;, &quot;86+3&quot;, &quot;89+2&quot;, &quot;89+2&quot;, &quot;35+3&quot;, &quot;89+3&quot;, &quot;44+…
+$ lcm                         &lt;chr&gt; &quot;87+3&quot;, &quot;80+3&quot;, &quot;78+3&quot;, &quot;82+3&quot;, &quot;89+2&quot;, &quot;38+3&quot;, &quot;81+3&quot;, &quot;50+…
+$ cm                          &lt;chr&gt; &quot;87+3&quot;, &quot;80+3&quot;, &quot;78+3&quot;, &quot;82+3&quot;, &quot;89+2&quot;, &quot;38+3&quot;, &quot;81+3&quot;, &quot;50+…
+$ rcm                         &lt;chr&gt; &quot;87+3&quot;, &quot;80+3&quot;, &quot;78+3&quot;, &quot;82+3&quot;, &quot;89+2&quot;, &quot;38+3&quot;, &quot;81+3&quot;, &quot;50+…
+$ rm                          &lt;chr&gt; &quot;91+2&quot;, &quot;84+3&quot;, &quot;86+3&quot;, &quot;89+2&quot;, &quot;89+2&quot;, &quot;35+3&quot;, &quot;89+3&quot;, &quot;44+…
+$ lwb                         &lt;chr&gt; &quot;66+3&quot;, &quot;64+3&quot;, &quot;63+3&quot;, &quot;67+3&quot;, &quot;79+3&quot;, &quot;32+3&quot;, &quot;67+3&quot;, &quot;37+…
+$ ldm                         &lt;chr&gt; &quot;64+3&quot;, &quot;66+3&quot;, &quot;59+3&quot;, &quot;63+3&quot;, &quot;80+3&quot;, &quot;36+3&quot;, &quot;63+3&quot;, &quot;43+…
+$ cdm                         &lt;chr&gt; &quot;64+3&quot;, &quot;66+3&quot;, &quot;59+3&quot;, &quot;63+3&quot;, &quot;80+3&quot;, &quot;36+3&quot;, &quot;63+3&quot;, &quot;43+…
+$ rdm                         &lt;chr&gt; &quot;64+3&quot;, &quot;66+3&quot;, &quot;59+3&quot;, &quot;63+3&quot;, &quot;80+3&quot;, &quot;36+3&quot;, &quot;63+3&quot;, &quot;43+…
+$ rwb                         &lt;chr&gt; &quot;66+3&quot;, &quot;64+3&quot;, &quot;63+3&quot;, &quot;67+3&quot;, &quot;79+3&quot;, &quot;32+3&quot;, &quot;67+3&quot;, &quot;37+…
+$ lb                          &lt;chr&gt; &quot;61+3&quot;, &quot;61+3&quot;, &quot;60+3&quot;, &quot;62+3&quot;, &quot;75+3&quot;, &quot;32+3&quot;, &quot;63+3&quot;, &quot;35+…
+$ lcb                         &lt;chr&gt; &quot;50+3&quot;, &quot;60+3&quot;, &quot;53+3&quot;, &quot;50+3&quot;, &quot;69+3&quot;, &quot;33+3&quot;, &quot;54+3&quot;, &quot;34+…
+$ cb                          &lt;chr&gt; &quot;50+3&quot;, &quot;60+3&quot;, &quot;53+3&quot;, &quot;50+3&quot;, &quot;69+3&quot;, &quot;33+3&quot;, &quot;54+3&quot;, &quot;34+…
+$ rcb                         &lt;chr&gt; &quot;50+3&quot;, &quot;60+3&quot;, &quot;53+3&quot;, &quot;50+3&quot;, &quot;69+3&quot;, &quot;33+3&quot;, &quot;54+3&quot;, &quot;34+…
+$ rb                          &lt;chr&gt; &quot;61+3&quot;, &quot;61+3&quot;, &quot;60+3&quot;, &quot;62+3&quot;, &quot;75+3&quot;, &quot;32+3&quot;, &quot;63+3&quot;, &quot;35+…
+$ gk                          &lt;chr&gt; &quot;19+3&quot;, &quot;19+3&quot;, &quot;20+3&quot;, &quot;20+3&quot;, &quot;21+3&quot;, &quot;89+3&quot;, &quot;18+3&quot;, &quot;88+…
+$ player_face_url             &lt;chr&gt; &quot;https://cdn.sofifa.net/players/158/023/22_120.png&quot;, &quot;https:…
+$ club_logo_url               &lt;chr&gt; &quot;https://cdn.sofifa.net/teams/73/60.png&quot;, &quot;https://cdn.sofif…
+$ club_flag_url               &lt;chr&gt; &quot;https://cdn.sofifa.net/flags/fr.png&quot;, &quot;https://cdn.sofifa.n…
+$ nation_logo_url             &lt;chr&gt; &quot;https://cdn.sofifa.net/teams/1369/60.png&quot;, &quot;https://cdn.sof…
+$ nation_flag_url             &lt;chr&gt; &quot;https://cdn.sofifa.net/flags/ar.png&quot;, &quot;https://cdn.sofifa.n…</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>The first few columns are all about basic player info—names, age,
+nationality, club, and contract details. You also get their market
+value, wages, and some traits like preferred foot, weak foot rating, and
+skill moves. The middle part of the dataset dives into how good they are
+overall, with stats like pace, shooting, passing, dribbling, defending,
+and physicality. It then breaks things down even further into attacking,
+skill, movement, power, mentality, and defense, with goalkeeping stats
+in their own section. Later columns show how well a player fits into
+different positions on the field. The last part mostly has links for
+player photos, club logos, and national team flags. Some columns, like
+extra URLs and things like “real face” or player tags, don’t really add
+much useful info. If you wanted to clean this up, a good order would be
+player details first, then club and national team info, contract
+details, overall ratings, more detailed performance stats, position
+ratings, and then any media-related stuff. That way, it’s easier to
+read, less cluttered, and makes comparing players more
+straightforward.</p>
+</div>
+<div id="task-8-best-player-by-overall" class="section level2">
+<h2>Task 8: Best Player by Overall</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmVzdF9wbGF5ZXIgPC0gcGxheWVyc1t3aGljaC5tYXgocGxheWVycyRvdmVyYWxsKSxdXG5iZXN0X3BsYXllcltjKFwic2hvcnRfbmFtZVwiLCBcImNsdWJfbmFtZVwiLCBcIm92ZXJhbGxcIiwgXCJ3YWdlX2V1clwiLCBcInBsYXllcl9wb3NpdGlvbnNcIildXG5gYGAifQ== -->
+<pre class="r"><code>best_player &lt;- players[which.max(players$overall),]
+best_player[c(&quot;short_name&quot;, &quot;club_name&quot;, &quot;overall&quot;, &quot;wage_eur&quot;, &quot;player_positions&quot;)]</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6MSwibmNvbCI6NSwic3VtbWFyeSI6eyJEZXNjcmlwdGlvbiI6WyJkZiBbMSDDlyA1XSJdfX0sInJkZiI6Ikg0c0lBQUFBQUFBQUJsMVJ5MDdETUJEY1BFc2lVU3JsQi9JQlRTNGM0SXBBNVFJU2Fvdm9CVVZ1WXRJSTE0N3NwSVUvNEtzTGRyQWhjaVFyNDlrZDdleDRlYmU1akRjeEFIamdldzU0Z1lRUVBLOFgyVFdBNzhxTEF6NUU2djhobXhKVmxXYzJLcHc5NU9rakZxS3grT1FKOFVha0s5VFFMcnZIZkMrQnBNK0hGb0JYZWFZSzN5UmZvTCt4UEY2K3pOUFZlcDdlTGl3bkFVVjdMSFI3WU5yRmp2R3VVQ1hOUkNYcHQyTml3ZzZZSTBLTTd5T3FjWUY3cnUremxxQlB6SXVXaWFackdCWFcySWl6WTI1R215MGMyMXRKa0JEMktoWHFVUDdHbFJXQWt5V1pzRmFQYzFXOG9TVjJ1RVZjOUZTNXFMSnkxOVAzN01vcWV5MnQxY3gvZzJPemZ6ajRkZUYrYTNtbzVTR21kVU5OWkFGQlcyd0M4eXA4MEhBcXN4aWl5RnN1bjlmc0tWbVJkNnhEUmhLWGpCaG0yQnhPUHh0aXZUWnpBZ0FBIn0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["short_name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["club_name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["overall"],"name":[3],"type":["int"],"align":["right"]},{"label":["wage_eur"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["player_positions"],"name":[5],"type":["chr"],"align":["left"]}],"data":[{"1":"L. Messi","2":"Paris Saint-Germain","3":"93","4":"320000","5":"RW, ST, CF","_rn_":"1"}],"options":{"columns":{"min":{},"max":[10],"total":[5]},"rows":{"min":[10],"max":[10],"total":[1]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="task-9-top-100-players-analysis" class="section level2">
+<h2>Task 9: Top 100 Players Analysis</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudG9wXzEwMCA8LSBwbGF5ZXJzICU+JVxuICBhcnJhbmdlKGRlc2Mob3ZlcmFsbCkpICU+JVxuICBoZWFkKDEwMClcblxubGVmdF9yaWdodF9mb290ZWQgPC0gdG9wXzEwMCAlPiVcbiAgY291bnQocHJlZmVycmVkX2Zvb3QpICU+JVxuICBtdXRhdGUocHJvcG9ydGlvbiA9IG4gLyBzdW0obikpXG5sZWZ0X3JpZ2h0X2Zvb3RlZFxuYGBgIn0= -->
+<pre class="r"><code>top_100 &lt;- players %&gt;%
+  arrange(desc(overall)) %&gt;%
+  head(100)
+
+left_right_footed &lt;- top_100 %&gt;%
+  count(preferred_foot) %&gt;%
+  mutate(proportion = n / sum(n))
+left_right_footed</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6MiwibmNvbCI6Mywic3VtbWFyeSI6eyJEZXNjcmlwdGlvbiI6WyJkZiBbMiDDlyAzXSJdfX0sInJkZiI6Ikg0c0lBQUFBQUFBQUJsMVFRVTdETUJCY3gwbFFMVkdRNEJ2TmhRdTNYaEFuRHFnQ3FUZGtFaWVOQ0xibHVNQlg0RWM4aFU4VTFva1hxYmEwOHU1NloyYzhtNXZ0bGRnS0FPQ1Fjd2E4d0JTS3g0ZmIxVFZBbm1IQklJZEZ1RDl3NkdLYUJEakh5T0pEZnFkYUgvTmkwM2M3ajhucE5BQndpWEdQc1F6MSt2c3puSy8xejN3bkRJV1dyMnFNMjNsc0xxMVRyWEpPTlUrdE1jVERkRXlFZGNZYTUzdWprMjBMWjk0cjJraHkySHdmMDlhREhJbVdtcUtSWGxhdFF6eFdod1J5WW14Z1JGQVdIQ2tUTUhOSjQyeXZnNUptVmUvMitpVlllL1RNcmU0Q1p4UUlVWEFVKzUveldVWDJHK0ZsaEpkS2Q3MVc5SjFCUHF1Qk5qZnFqWXhFUHlZN0t1dDZUVVlLN0k2Vk4xNFNSTlJtb003MGN6ajhBUk5nZzZvbUFnQUEifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["preferred_foot"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["proportion"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"Left","2":"20","3":"0.2"},{"1":"Right","2":"80","3":"0.8"}],"options":{"columns":{"min":{},"max":[10],"total":[3]},"rows":{"min":[10],"max":[10],"total":[2]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="task-10-average-overall-rating-by-foot-preference" class="section level2">
+<h2>Task 10: Average Overall Rating by Foot Preference</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGVmdF92c19yaWdodF9hdmcgPC0gcGxheWVycyAlPiVcbiAgZ3JvdXBfYnkocHJlZmVycmVkX2Zvb3QpICU+JVxuICBzdW1tYXJpc2UoYXZnX292ZXJhbGwgPSBtZWFuKG92ZXJhbGwsIG5hLnJtID0gVFJVRSkpXG5sZWZ0X3ZzX3JpZ2h0X2F2Z1xuYGBgIn0= -->
+<pre class="r"><code>left_vs_right_avg &lt;- players %&gt;%
+  group_by(preferred_foot) %&gt;%
+  summarise(avg_overall = mean(overall, na.rm = TRUE))
+left_vs_right_avg</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibnJvdyI6MiwibmNvbCI6Miwic3VtbWFyeSI6eyJBIHRpYmJsZSI6WyIyIMOXIDIiXX19LCJyZGYiOiJINHNJQUFBQUFBQUFCbDFRdTA3RE1CUzllVllOYWtId0Qyekp3Z0lMNm9DWUdLcUtTbVdxM09RbWpYRHR5SEVESTUvQnlFZnhQUTNYYVR4Z0QvYTV4L2VjKzFnOWJlNlNUUUlBQVlTQkIwRkVFS0wxNjNONkR4RDZGSGdRd3RTOG41UjBROENRVjhONy9naGZzTlFqamxaMXRkY0U1aVpoc2Z5K0xuNFBqNHNsNHUxUDhPWTRSb0lkc0hYYzVvM0NFcFhDWWx0S2FYMHZXRmR0WlllS2NlNjRUSlg4eUt6VHpEaDkwZFgzL2NrdGwzUFcybktXVEFxbVdWWXEwbFBrU2lheTBiVVVKUExONUxFajlwUkRYQjZGNmFSSTgvMVJ2S2NQem5mUWlNclVIS2p6bVkzWS80OU5GMzQveXVOUkhxT29hb0YySE01MnlLMXpnWjFkSU8xaldFZldxRnJZQlNiRXRwbVdtbGxKa2t0dW1XRnlPUDBCUXo2SDVBNENBQUE9In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["preferred_foot"],"name":[1],"type":["chr"],"align":["left"]},{"label":["avg_overall"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Left","2":"66.37612"},{"1":"Right","2":"65.58430"}],"options":{"columns":{"min":{},"max":[10],"total":[2]},"rows":{"min":[10],"max":[10],"total":[2]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="task-11-youngest-high-rated-left-footed-player" class="section level2">
+<h2>Task 11: Youngest High-Rated Left-Footed Player</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxueW91bmdlc3RfbGVmdCA8LSBwbGF5ZXJzICU+JVxuICBmaWx0ZXIocHJlZmVycmVkX2Zvb3QgPT0gXCJMZWZ0XCIgJiBvdmVyYWxsID4gODApICU+JVxuICBhcnJhbmdlKGFnZSkgJT4lXG4gIHNsaWNlKDEpXG55b3VuZ2VzdF9sZWZ0W2MoXCJzaG9ydF9uYW1lXCIsIFwiYWdlXCIsIFwib3ZlcmFsbFwiKV1cbmBgYCJ9 -->
+<pre class="r"><code>youngest_left &lt;- players %&gt;%
+  filter(preferred_foot == &quot;Left&quot; &amp; overall &gt; 80) %&gt;%
+  arrange(age) %&gt;%
+  slice(1)
+youngest_left[c(&quot;short_name&quot;, &quot;age&quot;, &quot;overall&quot;)]</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6MSwibmNvbCI6Mywic3VtbWFyeSI6eyJEZXNjcmlwdGlvbiI6WyJkZiBbMSDDlyAzXSJdfX0sInJkZiI6Ikg0c0lBQUFBQUFBQUJsMVF6VTdETUF4Mm03YlRLZzFOZ2dmZ0JScUJkdGtERE1RWmdkUWJNbTNvS29KVEpkbmc2UWRKU2RESUtWOXNmei8yNDY3ZDFHME5BQXdLbGdFckhZVHkrZW0rMlFJVXVmdGtVTURTdjE5dTZIS2VCRmlmTmVvN2Z2MkFLSkY2OTF2TkhZQ3JNOXdtVWlYaGh6QkJoa1VaczFmYXZ2aFdxREFjSWx5b285QW9aU0swMU9xVFI3SG9scVZ1blVSajB0QTlXdVJ2MnJzQm5CTEtRazEyVk9SSXVkKzRTc2laVGdyckEva1VmZFB0RC9UZTNONGtmVGJSNEUxRFF2aWY5Zyt6M3hqNWQ2QlhnVjRKR2thS3R5Z2x2Z29abFh0eERQRENIV08rQlovMFNEWXU2cXFHVzJVeFV1cE95VmlaVjRmVER5c2V5R0FIQWdBQSJ9 -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["short_name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["age"],"name":[2],"type":["int"],"align":["right"]},{"label":["overall"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"E. Haaland","2":"20","3":"88"}],"options":{"columns":{"min":{},"max":[10],"total":[3]},"rows":{"min":[10],"max":[10],"total":[1]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="task-12-top-potential-left-footed-players-under-35" class="section level2">
+<h2>Task 12: Top Potential Left-Footed Players Under 35</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudG9wX3BvdGVudGlhbF9sZWZ0IDwtIHBsYXllcnMgJT4lXG4gIGZpbHRlcihwcmVmZXJyZWRfZm9vdCA9PSBcIkxlZnRcIiwgYWdlIDwgMzUpICU+JVxuICBhcnJhbmdlKGRlc2MocG90ZW50aWFsKSkgJT4lXG4gIGhlYWQoNSlcbnRvcF9wb3RlbnRpYWxfbGVmdFtjKFwic2hvcnRfbmFtZVwiLCBcImFnZVwiLCBcIm92ZXJhbGxcIiwgXCJwb3RlbnRpYWxcIiwgXCJ2YWx1ZV9ldXJcIildXG5gYGAifQ== -->
+<pre class="r"><code>top_potential_left &lt;- players %&gt;%
+  filter(preferred_foot == &quot;Left&quot;, age &lt; 35) %&gt;%
+  arrange(desc(potential)) %&gt;%
+  head(5)
+top_potential_left[c(&quot;short_name&quot;, &quot;age&quot;, &quot;overall&quot;, &quot;potential&quot;, &quot;value_eur&quot;)]</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6NSwibmNvbCI6NSwic3VtbWFyeSI6eyJEZXNjcmlwdGlvbiI6WyJkZiBbNSDDlyA1XSJdfX0sInJkZiI6Ikg0c0lBQUFBQUFBQUJsMVJUVXNETVJCTnU5M1dyclFVL0xnSmkwZWhnZUxGYTFHTG9JSkloWXBLU2J1eFhWeVRaVGRieFpPZXZJdUlSMytKK0J2OFFkV1piVkxhSEI0ejgxNkdtVGM1UCtqdGVqMlBFT0tRa2xNZ2pnc3BjUys2bmVZZUlhVWlGQVZTSWxXTWovQm9EVlZBSTQ4elllV0UrcWM4VFVOZGU0ZlVQMklzWWlJd3pERXlFNTZvSjlOelJ2Mk9ETGpROVdxWCt2c3lTNVFNVXlocmVzdzJZQjJ3Q2RnQWJDMW9ONEFlb0t0eGFXbUlhNDByUUIyMTl0dm5OenBzZndVN1B4Zy9YbitmRitQNzRBV2o1ZDBWN0o2bmxtOHZIY3RFOVZIU2pNTkdKcTFJc011aVNKZlZXQ291Vk1qbXhJUkZHZS96TExGR1ZSUDVRTTA0OUZPYzdZTytsbmNhUml3MU94blNDNWhpOURiQm5RaVpXaTBWR2F0UUNtZ3E0a2VXcmVaQ1loR05UT0FtUVhNNHpzUmRzOVd5ZENjV0l4eWFVelBVZEhTWGMxeWorS2ZieTdxOXpNVW9GT1ppYnNRRzNKekhDZmhFcDNVNFNINFBHaWVoVU1Zb3NDbFZVczB2NmcxbFpKamNPcG4rQXlxTmJ3bmVBZ0FBIn0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["short_name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["age"],"name":[2],"type":["int"],"align":["right"]},{"label":["overall"],"name":[3],"type":["int"],"align":["right"]},{"label":["potential"],"name":[4],"type":["int"],"align":["right"]},{"label":["value_eur"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"L. Messi","2":"34","3":"93","4":"93","5":"78000000","_rn_":"1"},{"1":"E. Haaland","2":"20","3":"88","4":"93","5":"137500000","_rn_":"2"},{"1":"K. Havertz","2":"22","3":"84","4":"92","5":"94500000","_rn_":"3"},{"1":"P. Foden","2":"21","3":"84","4":"92","5":"94500000","_rn_":"4"},{"1":"T. Courtois","2":"29","3":"89","4":"91","5":"85500000","_rn_":"5"}],"options":{"columns":{"min":{},"max":[10],"total":[5]},"rows":{"min":[10],"max":[10],"total":[5]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="task-13-best-left-footed-players-by-specific-skills" class="section level2">
+<h2>Task 13: Best Left-Footed Players by Specific Skills</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmVzdF9kcmliYmxlciA8LSBwbGF5ZXJzICU+JVxuICBmaWx0ZXIocHJlZmVycmVkX2Zvb3QgPT0gXCJMZWZ0XCIpICU+JVxuICBhcnJhbmdlKGRlc2MoZHJpYmJsaW5nKSkgJT4lXG4gIHNsaWNlKDEpXG5iZXN0X2RyaWJibGVyW2MoXCJzaG9ydF9uYW1lXCIsIFwiYWdlXCIsIFwiZHJpYmJsaW5nXCIpXVxuYGBgIn0= -->
+<pre class="r"><code>best_dribbler &lt;- players %&gt;%
+  filter(preferred_foot == &quot;Left&quot;) %&gt;%
+  arrange(desc(dribbling)) %&gt;%
+  slice(1)
+best_dribbler[c(&quot;short_name&quot;, &quot;age&quot;, &quot;dribbling&quot;)]</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6MSwibmNvbCI6Mywic3VtbWFyeSI6eyJEZXNjcmlwdGlvbiI6WyJkZiBbMSDDlyAzXSJdfX0sInJkZiI6Ikg0c0lBQUFBQUFBQUJsMVF3VTdFSUJTY2xyWmFralVtL3NERyszTHg0Z2NZVDNveG11eHRRN2RzSlVGb2dLaGZ2d3BkTUNzbmhubHY1czE3THcvYk83cWxBQWdhVW9HMEFhSjllMzNjM0FOTkhUNFZHdlR4L1E1Tk4wc25jSDFXdUh4aTYyZmhuQXg0dGZEQTdSbmVGVWF0NWgvQ0pST1NTT3JlamZXN1dFb000Vk9HL1dqbE1DaXBwOEtxdCthTFpiczhyeXJuN1JWM3JnaE5SKzQ1TzlnNER6Z1drZ3N6ZTJsMEVOVng0NjRRVjdZZ1ZvTndmbjFLS2NvaW1XTnUwQlFQLzZQK1lYTEtVUDhrZVpma25kQ1QxUGtVcmVLRFVObDVGSjhKWG9WTExJZGdzNVhhNXkwRDY1ZzNubWNKM1J1Vm1XVnZISDhCVjA5V1dnUUNBQUE9In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["short_name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["age"],"name":[2],"type":["int"],"align":["right"]},{"label":["dribbling"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"L. Messi","2":"34","3":"95"}],"options":{"columns":{"min":{},"max":[10],"total":[3]},"rows":{"min":[10],"max":[10],"total":[1]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGVmdF9oaWdoX3Nob290ZXJzIDwtIHBsYXllcnMgJT4lXG4gIGZpbHRlcihwcmVmZXJyZWRfZm9vdCA9PSBcIkxlZnRcIiwgc2hvb3RpbmcgPj0gODUpICU+JVxuICBjb3VudCgpXG5sZWZ0X2hpZ2hfc2hvb3RlcnNcbmBgYCJ9 -->
+<pre class="r"><code>left_high_shooters &lt;- players %&gt;%
+  filter(preferred_foot == &quot;Left&quot;, shooting &gt;= 85) %&gt;%
+  count()
+left_high_shooters</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6MSwibmNvbCI6MSwic3VtbWFyeSI6eyJEZXNjcmlwdGlvbiI6WyJkZiBbMSDDlyAxXSJdfX0sInJkZiI6Ikg0c0lBQUFBQUFBQUJsMVFXdzZDTUJCY25vWW1HbzBYNEFMeTQ0OEhNQjdBYU1KdmhRSk5ha3VnVVUrUExrZ1QzYS9kbmN4TVp2Wjh6UGNzWndBUVFCaDRFRVM0UW5TOW5IWUhnTkRIdzRNUWtuRytrTFNkQUlEbFBCa2hSWnJmUlkvTCtsZXBDU3ZwekROelRHZmxVYXRDOFo1YXNaSmJubFVkYXZFYWlHUmhXaXVOUnBFL0JvMXBqbzRBR3lVcW16YXlidEsrTWNZS1NnaGFYWDliVGhIaFB5Nk43cjluZVR6TFk2RnJxWVVycFBoTktPZGNpc2U4cnZBYjB6T3l0cFBhdXFhSTlwazFsanNKSzR4eXlOUWRoZy82QVhVZXZ3RUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["n"],"name":[1],"type":["int"],"align":["right"]}],"data":[{"1":"10"}],"options":{"columns":{"min":{},"max":[10],"total":[1]},"rows":{"min":[10],"max":[10],"total":[1]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmVzdF9mcmVla2lja190YWtlciA8LSBwbGF5ZXJzICU+JVxuICBmaWx0ZXIocHJlZmVycmVkX2Zvb3QgPT0gXCJMZWZ0XCIpICU+JVxuICBhcnJhbmdlKGRlc2Moc2tpbGxfZmtfYWNjdXJhY3kpKSAlPiVcbiAgc2xpY2UoMSlcbmJlc3RfZnJlZWtpY2tfdGFrZXJbYyhcInNob3J0X25hbWVcIiwgXCJza2lsbF9ma19hY2N1cmFjeVwiKV1cbmBgYCJ9 -->
+<pre class="r"><code>best_freekick_taker &lt;- players %&gt;%
+  filter(preferred_foot == &quot;Left&quot;) %&gt;%
+  arrange(desc(skill_fk_accuracy)) %&gt;%
+  slice(1)
+best_freekick_taker[c(&quot;short_name&quot;, &quot;skill_fk_accuracy&quot;)]</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6MSwibmNvbCI6Miwic3VtbWFyeSI6eyJEZXNjcmlwdGlvbiI6WyJkZiBbMSDDlyAyXSJdfX0sInJkZiI6Ikg0c0lBQUFBQUFBQUJsMlFUVTRFSVJDRnEra2ZIUktOeGd2TUJXVGp4Z01ZVjdveG1zektUc25RSXdHaEEvaDMrVkZvd1NpcnJuN0ZWKzlWM1YxdEx1aUdBa0FMWGR0QTI4Y1Mrb2Y3Ni9OTGdJN0Vud1k2V0tYdlIzeDBGb3NrbnZ4cEhONnc5YTN3WHNiNmFORUJIaXU0Ti9naWZBWkpGcWwvdGk2TXFaV1ZVNitrMXVPa1J1VDgxU0gvck9hc25IMW5aVll4YTJvenJ0SDdLaVhkWWtBMnVXUUdzSytRQXpzSGFVMkVTRnB4cU9ER1ZjTHg1SVJRa3F0MVFDWHFianViWGJMTStlQi8xdCthL0lRZ1h4a2ZNajRJczVPbTNLVFgrQ1IwbWJ3VmJ5VkNQTVZ5Q1RZN2FVSlpNNnFlQlJ1d0lKUmJYWlJsY2RoL0ExR2x5Q1QyQVFBQSJ9 -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["short_name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["skill_fk_accuracy"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"L. Messi","2":"94"}],"options":{"columns":{"min":{},"max":[10],"total":[2]},"rows":{"min":[10],"max":[10],"total":[1]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuTkFcbmBgYCJ9 -->
+<pre class="r"><code>NA</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkxhYmFrIDEuMSINCmF1dGhvcjogInhrb2tpbiINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQoNCmxpYnJhcnkodGlkeXZlcnNlKQ0KDQoNCiMgbG9hZCBkYXRhDQpwbGF5ZXJzIDwtIHJlYWQuY3N2KCIuL3BsYXllcnNfMjIuY3N2IikNCg0KZ2xpbXBzZShwbGF5ZXJzKQ0KDQojIHRhc2sgMg0KIyByb3dzIGFuZCBjb2xvbW5zDQpuX3Jvd3MgPC0gbnJvdyhwbGF5ZXJzKQ0Kbl9jb2xzIDwtIG5jb2wocGxheWVycykNCg0KY19uYW1lcyA8LSBjb2xuYW1lcyhwbGF5ZXJzKQ0KY19uYW1lcw0KDQppc19sYWJlbGVkIDwtICFpcy5udWxsKGNfbmFtZXMpDQpwcmludChwYXN0ZSgiaXMgbGFiZWxlZDogIiwgaXNfbGFiZWxlZCkpDQoNCiMgc2FwcGx5IGFwcGxpZXMgc2VsZWN0ZWQgZnVuY3Rpb24gdG8gZWFjaCBlbGVtZW50LCBpbiB0aGlzIGNhc2UgLSB0byBlYWNoIGNvbHVtbiBpbiBwbGF5ZXJzIA0KY29sdW1uc190eXBlcyA8LSBzYXBwbHkocGxheWVycywgY2xhc3MpDQppc19ob21vZ2VuZW91cyA8LSBsZW5ndGgodW5pcXVlKGNvbHVtbnNfdHlwZXMpKSA9PSAxDQpwcmludChwYXN0ZSgiaXMgaG9tb2dlbmVvdXM6ICIsIGlzX2hvbW9nZW5lb3VzKSkNCg0KIyB0YXNrIDMNCiMgJT4lIGlzIGEgcGlwZSBvcGVyYXRvciwgcGFzcyBvdXRwdXQgZnJvbSBvbmUgZnVuY3Rpb24gdG8gYW5vdGhlcg0KY29sX3R5cGVfY291bnRzIDwtIHNhcHBseShwbGF5ZXJzLCBjbGFzcykgJT4lIHRhYmxlKCkNCnByaW50KGNvbF90eXBlX2NvdW50cykNCg0KIyB0YXNrIDQNCiMgY29tcGxldGUuY2FzZXMgY2hlY2tzIGlmIGNvbHVtbiBoYXMgYSBOQSwgc3VtIHRoZW4gY291bnRzIHVwIGhvdyBtYW55IGNvbHVtbnMgd2l0aCBOQSB0aGVyZSBhcmUgDQpudW1fY29tcGxldGVfcmVjb3JkcyA8LSBzdW0oY29tcGxldGUuY2FzZXMocGxheWVycykpDQpudW1fY29tcGxldGVfcmVjb3Jkcw0KDQojIHRhc2sgNQ0KbnVtX2R1cGxpY2F0ZV9yb3dzIDwtIHN1bShkdXBsaWNhdGVkKHBsYXllcnMpKQ0KDQojIENoZWNrIGZvciBkdXBsaWNhdGUgY29sdW1ucw0KIyB0IGlzIGEgdHJhbnNwb3NlIGZ1bmN0aW9uLCBzd2FwcyByb3dzIGFuZCBjb2xzDQpudW1fZHVwbGljYXRlX2NvbHMgPC0gc3VtKGR1cGxpY2F0ZWQodChwbGF5ZXJzKSkpDQoNCiMgc2hvdyBvdXRwdXQgaW4gYSBsaXN0IGZvcm1hdA0KbGlzdChudW1fZHVwbGljYXRlX3Jvd3MgPSBudW1fZHVwbGljYXRlX3Jvd3MsIG51bV9kdXBsaWNhdGVfY29scyA9IG51bV9kdXBsaWNhdGVfY29scykNCg0KIyB0YXNrIDYNCiMgc2VsZWN0IG9ubHkgbnVtZXJpYyBjb2x1bW5zDQpudW1lcmljX2RhdGEgPC0gcGxheWVyc1ssIHNhcHBseShwbGF5ZXJzLCBpcy5udW1lcmljKV0gIA0KDQojIGdldCB0aGUgbWluIGFuZCBtYXggZm9yIGVhY2ggbnVtZXJpYyBjb2x1bW4NCm51bWVyaWNfcmFuZ2VzIDwtIGRhdGEuZnJhbWUoDQogIG1pbiA9IHNhcHBseShudW1lcmljX2RhdGEsIG1pbiwgbmEucm0gPSBUUlVFKSwNCiAgbWF4ID0gc2FwcGx5KG51bWVyaWNfZGF0YSwgbWF4LCBuYS5ybSA9IFRSVUUpDQopDQoNCnByaW50KG51bWVyaWNfcmFuZ2VzKQ0KDQojIHNlbGVjdCBvbmx5IGNoYXJhY3RlciAoY2F0ZWdvcmljYWwpIGNvbHVtbnMNCmNhdGVnb3JpY2FsX2RhdGEgPC0gcGxheWVyc1ssIHNhcHBseShwbGF5ZXJzLCBpcy5jaGFyYWN0ZXIpXQ0KDQojIGNvdW50IHVuaXF1ZSB2YWx1ZXMgaW4gZWFjaCBjYXRlZ29yaWNhbCBjb2x1bW4NCmNhdGVnb3JpY2FsX3ZhbHVlcyA8LSBzYXBwbHkoY2F0ZWdvcmljYWxfZGF0YSwgZnVuY3Rpb24oY29sKSBsZW5ndGgodW5pcXVlKGNvbCkpKQ0KDQojIGNvbnZlcnQgdG8gZGF0YWZyYW1lIGZvciBiZXR0ZXIgcmVhZGFiaWxpdHkNCmNhdGVnb3JpY2FsX3ZhbHVlcyA8LSBkYXRhLmZyYW1lKGNvbHVtbiA9IG5hbWVzKGNhdGVnb3JpY2FsX3ZhbHVlcyksIHVuaXF1ZV9jb3VudCA9IGNhdGVnb3JpY2FsX3ZhbHVlcykNCg0KcHJpbnQoY2F0ZWdvcmljYWxfdmFsdWVzKQ0KDQpsaXN0KG51bWVyaWNfcmFuZ2VzID0gbnVtZXJpY19yYW5nZXMsIGNhdGVnb3JpY2FsX3ZhbHVlcyA9IGNhdGVnb3JpY2FsX3ZhbHVlcykNCg0KIyB0YXNrIDcNCg0KZ2xpbXBzZShwbGF5ZXJzKQ0KIyBmaXJzdCBmZXcgY29sdW1ucyBsaWtlbHkgY29udGFpbiBwbGF5ZXIgaWRlbnRpZmljYXRpb24NCiMgbGF0dGVyIGNvbHVtbnMgY29udGFpbiBwZXJmb3JtYW5jZSBtZXRyaWNzDQojIHNvbWUgY29sdW1ucyBtYXkgYmUgcmVkdW5kYW50IChsaWtlIHBsYXllcl9pZCBhcHBlYXJpbmcgbXVsdGlwbGUgdGltZXMpDQojIGNvdWxkIGJlIHJlLWFycmFuZ2VkIGJ5IHBsYWNpbmcga2V5IGlkZW50aWZpZXJzIGZpcnN0LCB0aGVuIGJ5IHBlcmZvcm1hbmNlIG1ldHJpY3MNCg0KDQojIHRzazgNCg0KYmVzdF9wbGF5ZXIgPC0gcGxheWVyc1t3aGljaC5tYXgocGxheWVycyRvdmVyYWxsKSxdDQojIGZpbmQgYmFzZWQgb24gcGxheWVyJ3Mgb3ZlcmFsbA0KYmVzdF9wbGF5ZXJbYygic2hvcnRfbmFtZSIsICJjbHViX25hbWUiLCAib3ZlcmFsbCIsICJ3YWdlX2V1ciIsICJwbGF5ZXJfcG9zaXRpb25zIildDQoNCiMgdGFzayA5IA0KDQojIGdldCB0b3AgMTAwIHBsYXllcnMgYnkgb3ZlcmFsbA0KdG9wXzEwMCA8LSBwbGF5ZXJzICU+JQ0KICBhcnJhbmdlKGRlc2Mob3ZlcmFsbCkpICU+JQ0KICBoZWFkKDEwMCkNCg0KIyBjQ291bnQgbGVmdC0gYW5kIHJpZ2h0LWZvb3RlZCBwbGF5ZXJzIGluIHRoZSB0b3AgMTAwDQpsZWZ0X3JpZ2h0X2Zvb3RlZCA8LSB0b3BfMTAwICU+JQ0KICBjb3VudChwcmVmZXJyZWRfZm9vdCAgICAgICAgICAgICAgKQ0KDQojIGFkZCBwcm9wb3J0aW9uIGNvbHVtbg0KIyBuIGlzIHByb3BlcnR5IGNyZWF0ZWQgYnkgY291bnQNCmxlZnRfcmlnaHRfZm9vdGVkIDwtIGxlZnRfcmlnaHRfZm9vdGVkICU+JQ0KICBtdXRhdGUocHJvcG9ydGlvbiA9IG4gLyBzdW0obikpDQoNCmxlZnRfcmlnaHRfZm9vdGVkDQoNCnVuaXF1ZShwbGF5ZXJzJHByZWZlcnJlZF9mb290KQ0KDQojIHRhc2sgMTAgDQojIGF2ZXJhZ2Ugb3ZlcmFsbCByYXRpbmcgZm9yIGxlZnQtIGFuZCByaWdodC1mb290ZWQgcGxheWVycw0KbGVmdF92c19yaWdodF9hdmcgPC0gcGxheWVycyAlPiUNCiAgZ3JvdXBfYnkocHJlZmVycmVkX2Zvb3QpICU+JQ0KICBzdW1tYXJpc2UoYXZnX292ZXJhbGwgPSBtZWFuKG92ZXJhbGwpKQ0KDQpsZWZ0X3ZzX3JpZ2h0X2F2Zw0KDQojIHRhc2sgMTENCg0KeW91bmdlc3RfbGVmdCA8LSBwbGF5ZXJzICU+JQ0KICBmaWx0ZXIocHJlZmVycmVkX2Zvb3QgPT0gIkxlZnQiICYgb3ZlcmFsbCA+IDgwKSAlPiUNCiAgYXJyYW5nZShhZ2UpICU+JQ0KICBzbGljZSgxKQ0KDQp5b3VuZ2VzdF9sZWZ0W2MoInNob3J0X25hbWUiLCAiYWdlIiwgIm92ZXJhbGwiKV0NCg0KIyB0YXNrIDEyDQoNCnRvcF9wb3RlbnRpYWxfbGVmdCA8LSBwbGF5ZXJzICU+JQ0KICBmaWx0ZXIocHJlZmVycmVkX2Zvb3QgPT0gIkxlZnQiLCBhZ2UgPCAzNSkgJT4lDQogIGFycmFuZ2UoZGVzYyhwb3RlbnRpYWwpKSAlPiUNCiAgaGVhZCg1KQ0KDQp0b3BfcG90ZW50aWFsX2xlZnRbYygic2hvcnRfbmFtZSIsICJhZ2UiLCAib3ZlcmFsbCIsICJwb3RlbnRpYWwiLCAidmFsdWVfZXVyIildDQoNCiMgdGFzayAxMw0KDQojIGJlc3QgbGVmdC1mb290ZWQgZHJpYmJsZXINCmJlc3RfZHJpYmJsZXIgPC0gcGxheWVycyAlPiUNCiAgZmlsdGVyKHByZWZlcnJlZF9mb290ID09ICJMZWZ0IikgJT4lDQogIGFycmFuZ2UoZGVzYyhkcmliYmxpbmcpKSAlPiUNCiAgc2xpY2UoMSkNCg0KYmVzdF9kcmliYmxlcltjKCJzaG9ydF9uYW1lIiwgImFnZSIsICJkcmliYmxpbmciKV0NCg0KIyBudW1iZXIgb2YgbGVmdC1mb290ZWQgcGxheWVycyB3aXRoIHNob290aW5nIOKJpSA4NQ0KbGVmdF9oaWdoX3Nob290ZXJzIDwtIHBsYXllcnMgJT4lDQogIGZpbHRlcihwcmVmZXJyZWRfZm9vdCA9PSAiTGVmdCIsIHNob290aW5nID49IDg1KSAlPiUNCiAgY291bnQoKQ0KDQpsZWZ0X2hpZ2hfc2hvb3RlcnMNCg0KIyBiZXN0IGxlZnQtZm9vdGVkIGZyZWUga2ljayB0YWtlcg0KYmVzdF9mcmVla2lja190YWtlciA8LSBwbGF5ZXJzICU+JQ0KICBmaWx0ZXIocHJlZmVycmVkX2Zvb3QgPT0gIkxlZnQiKSAlPiUNCiAgYXJyYW5nZShkZXNjKHNraWxsX2ZrX2FjY3VyYWN5KSkgJT4lDQogIHNsaWNlKDEpDQoNCmJlc3RfZnJlZWtpY2tfdGFrZXJbYygic2hvcnRfbmFtZSIsICJza2lsbF9ma19hY2N1cmFjeSIpXQ0KDQo=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIjFfMSINCmF1dGhvcjogInhrb2tpbiINCmRhdGU6ICIyMDI1LTAyLTIzIg0Kb3V0cHV0OiBodG1sX25vdGVib29rDQplZGl0b3Jfb3B0aW9uczogDQogIGNodW5rX291dHB1dF90eXBlOiBpbmxpbmUNCi0tLQ0KDQpgYGB7ciBzZXR1cCwgaW5jbHVkZT1GQUxTRX0NCmxpYnJhcnkodGlkeXZlcnNlKQ0KYGBgDQoNCiMjIExvYWQgRGF0YQ0KYGBge3J9DQpwbGF5ZXJzIDwtIHJlYWQuY3N2KCIuL3BsYXllcnNfMjIuY3N2IikNCmdsaW1wc2UocGxheWVycykNCmBgYA0KDQpUaGUgZGF0YXNldCBpcyBsb2FkZWQgaXQgaGFzIG11bHRpcGxlIGNvbHVtbnMgd2l0aCBudW1lcmljYWwgYW5kIGNhdGVnb3JpY2FsIHZhbHVlcy4NCg0KIyMgVGFzayAyOiBSb3dzIGFuZCBDb2x1bW5zDQpgYGB7cn0NCm5fcm93cyA8LSBucm93KHBsYXllcnMpDQpuX2NvbHMgPC0gbmNvbChwbGF5ZXJzKQ0KDQpjX25hbWVzIDwtIGNvbG5hbWVzKHBsYXllcnMpDQpjX25hbWVzDQoNCmlzX2xhYmVsZWQgPC0gIWlzLm51bGwoY19uYW1lcykNCnByaW50KHBhc3RlKCJBcmUgYWxsIGxhYmVsZWQ6IiwgaXNfbGFiZWxlZCkpDQoNCmNvbHVtbnNfdHlwZXMgPC0gc2FwcGx5KHBsYXllcnMsIGNsYXNzKQ0KaXNfaG9tb2dlbmVvdXMgPC0gbGVuZ3RoKHVuaXF1ZShjb2x1bW5zX3R5cGVzKSkgPT0gMQ0KcHJpbnQocGFzdGUoIkFyZSBhbGwgaG9tb2dlbmVvdXM6IiwgaXNfaG9tb2dlbmVvdXMpKQ0KYGBgDQoNCiMjIFRhc2sgMzogQ29sdW1uIFR5cGUgQ291bnRzDQpgYGB7cn0NCmNvbF90eXBlX2NvdW50cyA8LSB0YWJsZShzYXBwbHkocGxheWVycywgY2xhc3MpKQ0KcHJpbnQoY29sX3R5cGVfY291bnRzKQ0KYGBgDQoNCiMjIFRhc2sgNDogQ291bnQgQ29tcGxldGUgUmVjb3Jkcw0KYGBge3J9DQoNCm5yb3cocGxheWVycykNCnN1bShyb3dTdW1zKGlzLm5hKGRmKSkgPiAwKQ0KDQpgYGANClRoYXQgbWVhbnMgdGhhdCB3ZSBoYXZlIDAgY29tcGxldGUgcm93cw0KDQojIyBUYXNrIDU6IENvdW50IER1cGxpY2F0ZXMNCmBgYHtyfQ0KbnVtX2R1cGxpY2F0ZV9yb3dzIDwtIHN1bShkdXBsaWNhdGVkKHBsYXllcnMpKQ0KbnVtX2R1cGxpY2F0ZV9jb2xzIDwtIHN1bShkdXBsaWNhdGVkKHQocGxheWVycykpKQ0KbGlzdChudW1fZHVwbGljYXRlX3Jvd3MgPSBudW1fZHVwbGljYXRlX3Jvd3MsIG51bV9kdXBsaWNhdGVfY29scyA9IG51bV9kdXBsaWNhdGVfY29scykNCmBgYA0KYGBge3IgZHVwbGljYXRlZCBjb2xzfQ0KZHVwbGljYXRlZCh0KHBsYXllcnMpKQ0KYGBgDQpUaGlzIHNob3dzIHdoaWNoIGNvbHVtbnMgYXJlIGR1cGxpY2F0ZWQNCg0KIyMgVGFzayA2OiBOdW1lcmljIGFuZCBDYXRlZ29yaWNhbCBEYXRhIFJhbmdlcw0KYGBge3IgbnVtZXJpYyByYW5nZXN9DQpudW1lcmljX2RhdGEgPC0gcGxheWVyc1ssIHNhcHBseShwbGF5ZXJzLCBpcy5udW1lcmljKV0gIA0KbnVtZXJpY19yYW5nZXMgPC0gZGF0YS5mcmFtZSgNCiAgbWluID0gc2FwcGx5KG51bWVyaWNfZGF0YSwgbWluLCBuYS5ybSA9IFRSVUUpLA0KICBtYXggPSBzYXBwbHkobnVtZXJpY19kYXRhLCBtYXgsIG5hLnJtID0gVFJVRSkNCikNCm51bWVyaWNfcmFuZ2VzDQpgYGANCkNoZWNrIG1pbiBhbmQgbWF4IHZhbHVlcyBvZiBlYWNoIG51bWVyaWMgY29sdW1uDQoNCmBgYHtyIGNhdGVnb3JpY2FsIHJhbmdlc30NCmNhdGVnb3JpY2FsX2RhdGEgPC0gcGxheWVyc1ssIHNhcHBseShwbGF5ZXJzLCBpcy5jaGFyYWN0ZXIpXQ0KY2F0ZWdvcmljYWxfdmFsdWVzIDwtIHNhcHBseShjYXRlZ29yaWNhbF9kYXRhLCBmdW5jdGlvbihjb2wpIGxlbmd0aCh1bmlxdWUoY29sKSkpDQpjYXRlZ29yaWNhbF92YWx1ZXMgPC0gZGF0YS5mcmFtZShjb2x1bW4gPSBuYW1lcyhjYXRlZ29yaWNhbF92YWx1ZXMpLCB1bmlxdWVfY291bnQgPSBjYXRlZ29yaWNhbF92YWx1ZXMpDQoNCmNhdGVnb3JpY2FsX3ZhbHVlcw0KYGBgDQpDb3VudCB1bmlpcXVlIHZhbHVlcw0KDQojIyBUYXNrIDc6IERhdGEgU3RydWN0dXJlIEFuYWx5c2lzDQpgYGB7cn0NCmdsaW1wc2UocGxheWVycykNCmBgYA0KVGhlIGZpcnN0IGZldyBjb2x1bW5zIGFyZSBhbGwgYWJvdXQgYmFzaWMgcGxheWVyIGluZm/igJRuYW1lcywgYWdlLCBuYXRpb25hbGl0eSwgY2x1YiwgYW5kIGNvbnRyYWN0IGRldGFpbHMuIFlvdSBhbHNvIGdldCB0aGVpciBtYXJrZXQgdmFsdWUsIHdhZ2VzLCBhbmQgc29tZSB0cmFpdHMgbGlrZSBwcmVmZXJyZWQgZm9vdCwgd2VhayBmb290IHJhdGluZywgYW5kIHNraWxsIG1vdmVzLiBUaGUgbWlkZGxlIHBhcnQgb2YgdGhlIGRhdGFzZXQgZGl2ZXMgaW50byBob3cgZ29vZCB0aGV5IGFyZSBvdmVyYWxsLCB3aXRoIHN0YXRzIGxpa2UgcGFjZSwgc2hvb3RpbmcsIHBhc3NpbmcsIGRyaWJibGluZywgZGVmZW5kaW5nLCBhbmQgcGh5c2ljYWxpdHkuIEl0IHRoZW4gYnJlYWtzIHRoaW5ncyBkb3duIGV2ZW4gZnVydGhlciBpbnRvIGF0dGFja2luZywgc2tpbGwsIG1vdmVtZW50LCBwb3dlciwgbWVudGFsaXR5LCBhbmQgZGVmZW5zZSwgd2l0aCBnb2Fsa2VlcGluZyBzdGF0cyBpbiB0aGVpciBvd24gc2VjdGlvbi4gTGF0ZXIgY29sdW1ucyBzaG93IGhvdyB3ZWxsIGEgcGxheWVyIGZpdHMgaW50byBkaWZmZXJlbnQgcG9zaXRpb25zIG9uIHRoZSBmaWVsZC4gVGhlIGxhc3QgcGFydCBtb3N0bHkgaGFzIGxpbmtzIGZvciBwbGF5ZXIgcGhvdG9zLCBjbHViIGxvZ29zLCBhbmQgbmF0aW9uYWwgdGVhbSBmbGFncy4gU29tZSBjb2x1bW5zLCBsaWtlIGV4dHJhIFVSTHMgYW5kIHRoaW5ncyBsaWtlICJyZWFsIGZhY2UiIG9yIHBsYXllciB0YWdzLCBkb27igJl0IHJlYWxseSBhZGQgbXVjaCB1c2VmdWwgaW5mby4gSWYgeW91IHdhbnRlZCB0byBjbGVhbiB0aGlzIHVwLCBhIGdvb2Qgb3JkZXIgd291bGQgYmUgcGxheWVyIGRldGFpbHMgZmlyc3QsIHRoZW4gY2x1YiBhbmQgbmF0aW9uYWwgdGVhbSBpbmZvLCBjb250cmFjdCBkZXRhaWxzLCBvdmVyYWxsIHJhdGluZ3MsIG1vcmUgZGV0YWlsZWQgcGVyZm9ybWFuY2Ugc3RhdHMsIHBvc2l0aW9uIHJhdGluZ3MsIGFuZCB0aGVuIGFueSBtZWRpYS1yZWxhdGVkIHN0dWZmLiBUaGF0IHdheSwgaXTigJlzIGVhc2llciB0byByZWFkLCBsZXNzIGNsdXR0ZXJlZCwgYW5kIG1ha2VzIGNvbXBhcmluZyBwbGF5ZXJzIG1vcmUgc3RyYWlnaHRmb3J3YXJkLg0KDQojIyBUYXNrIDg6IEJlc3QgUGxheWVyIGJ5IE92ZXJhbGwNCmBgYHtyfQ0KYmVzdF9wbGF5ZXIgPC0gcGxheWVyc1t3aGljaC5tYXgocGxheWVycyRvdmVyYWxsKSxdDQpiZXN0X3BsYXllcltjKCJzaG9ydF9uYW1lIiwgImNsdWJfbmFtZSIsICJvdmVyYWxsIiwgIndhZ2VfZXVyIiwgInBsYXllcl9wb3NpdGlvbnMiKV0NCmBgYA0KDQojIyBUYXNrIDk6IFRvcCAxMDAgUGxheWVycyBBbmFseXNpcw0KYGBge3J9DQp0b3BfMTAwIDwtIHBsYXllcnMgJT4lDQogIGFycmFuZ2UoZGVzYyhvdmVyYWxsKSkgJT4lDQogIGhlYWQoMTAwKQ0KDQpsZWZ0X3JpZ2h0X2Zvb3RlZCA8LSB0b3BfMTAwICU+JQ0KICBjb3VudChwcmVmZXJyZWRfZm9vdCkgJT4lDQogIG11dGF0ZShwcm9wb3J0aW9uID0gbiAvIHN1bShuKSkNCmxlZnRfcmlnaHRfZm9vdGVkDQpgYGANCg0KIyMgVGFzayAxMDogQXZlcmFnZSBPdmVyYWxsIFJhdGluZyBieSBGb290IFByZWZlcmVuY2UNCmBgYHtyfQ0KbGVmdF92c19yaWdodF9hdmcgPC0gcGxheWVycyAlPiUNCiAgZ3JvdXBfYnkocHJlZmVycmVkX2Zvb3QpICU+JQ0KICBzdW1tYXJpc2UoYXZnX292ZXJhbGwgPSBtZWFuKG92ZXJhbGwsIG5hLnJtID0gVFJVRSkpDQpsZWZ0X3ZzX3JpZ2h0X2F2Zw0KYGBgDQoNCiMjIFRhc2sgMTE6IFlvdW5nZXN0IEhpZ2gtUmF0ZWQgTGVmdC1Gb290ZWQgUGxheWVyDQpgYGB7cn0NCnlvdW5nZXN0X2xlZnQgPC0gcGxheWVycyAlPiUNCiAgZmlsdGVyKHByZWZlcnJlZF9mb290ID09ICJMZWZ0IiAmIG92ZXJhbGwgPiA4MCkgJT4lDQogIGFycmFuZ2UoYWdlKSAlPiUNCiAgc2xpY2UoMSkNCnlvdW5nZXN0X2xlZnRbYygic2hvcnRfbmFtZSIsICJhZ2UiLCAib3ZlcmFsbCIpXQ0KYGBgDQoNCiMjIFRhc2sgMTI6IFRvcCBQb3RlbnRpYWwgTGVmdC1Gb290ZWQgUGxheWVycyBVbmRlciAzNQ0KYGBge3J9DQp0b3BfcG90ZW50aWFsX2xlZnQgPC0gcGxheWVycyAlPiUNCiAgZmlsdGVyKHByZWZlcnJlZF9mb290ID09ICJMZWZ0IiwgYWdlIDwgMzUpICU+JQ0KICBhcnJhbmdlKGRlc2MocG90ZW50aWFsKSkgJT4lDQogIGhlYWQoNSkNCnRvcF9wb3RlbnRpYWxfbGVmdFtjKCJzaG9ydF9uYW1lIiwgImFnZSIsICJvdmVyYWxsIiwgInBvdGVudGlhbCIsICJ2YWx1ZV9ldXIiKV0NCmBgYA0KDQojIyBUYXNrIDEzOiBCZXN0IExlZnQtRm9vdGVkIFBsYXllcnMgYnkgU3BlY2lmaWMgU2tpbGxzDQpgYGB7ciBiZXN0IGRyaWJibGVyfQ0KYmVzdF9kcmliYmxlciA8LSBwbGF5ZXJzICU+JQ0KICBmaWx0ZXIocHJlZmVycmVkX2Zvb3QgPT0gIkxlZnQiKSAlPiUNCiAgYXJyYW5nZShkZXNjKGRyaWJibGluZykpICU+JQ0KICBzbGljZSgxKQ0KYmVzdF9kcmliYmxlcltjKCJzaG9ydF9uYW1lIiwgImFnZSIsICJkcmliYmxpbmciKV0NCmBgYA0KDQpgYGB7ciBsZWZ0IGhpZ2ggc2hvb3Rlcn0NCmxlZnRfaGlnaF9zaG9vdGVycyA8LSBwbGF5ZXJzICU+JQ0KICBmaWx0ZXIocHJlZmVycmVkX2Zvb3QgPT0gIkxlZnQiLCBzaG9vdGluZyA+PSA4NSkgJT4lDQogIGNvdW50KCkNCmxlZnRfaGlnaF9zaG9vdGVycw0KYGBgDQoNCmBgYHtyIGZyZWVraWNrIHRha2VyfQ0KYmVzdF9mcmVla2lja190YWtlciA8LSBwbGF5ZXJzICU+JQ0KICBmaWx0ZXIocHJlZmVycmVkX2Zvb3QgPT0gIkxlZnQiKSAlPiUNCiAgYXJyYW5nZShkZXNjKHNraWxsX2ZrX2FjY3VyYWN5KSkgJT4lDQogIHNsaWNlKDEpDQpiZXN0X2ZyZWVraWNrX3Rha2VyW2MoInNob3J0X25hbWUiLCAic2tpbGxfZmtfYWNjdXJhY3kiKV0NCg0KYGBgDQo=</div>
 
 
 

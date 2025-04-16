@@ -1,0 +1,157 @@
+---
+title: "Lab2_4"
+author: "Hlib Kokin"
+date: "2025-04-14"
+output: html_document
+---
+
+# Imports
+```{r}
+library(tidyverse)
+library(tidyverse)
+library(cluster)
+library(factoextra)
+library(dbscan)
+library(rpart)
+library(rpart.plot)
+library(pheatmap)
+library(ggplot2)
+```
+# Load
+```{r}
+players <- read_csv("./players_22.csv")
+names(players)
+```
+# Preprocess
+```{r}
+
+# Select key features for clustering
+fifa_cluster <- players %>%
+  select(short_name, overall, age, height_cm, weight_kg, dribbling, passing, defending, shooting, pace, physic) %>%
+  drop_na()
+
+head(fifa_cluster)
+
+```
+
+
+```{r}
+
+# Remove names for clustering
+fifa_features <- fifa_cluster %>%
+  select(-short_name)
+
+# Scale data
+fifa_scaled <- scale(fifa_features)
+
+```
+# Clustering 
+## K-Means Clustering
+```{r}
+# Determine optimal number of clusters using Elbow method
+fviz_nbclust(fifa_scaled, kmeans, method = "wss") + 
+  labs(title = "Elbow Method for Optimal K")
+
+# Apply k-means
+set.seed(123)
+kmeans_res <- kmeans(fifa_scaled, centers = 3, nstart = 25)
+df_kmeans <- cbind(fifa_scaled, cluster = factor(kmeans_res$cluster))
+fifa_cluster$kmeans_cluster <- as.factor(kmeans_res$cluster)
+
+# Visualize
+fviz_cluster(kmeans_res, data = fifa_scaled, geom = "point", ellipse.type = "norm", main = "K-Means Clustering")
+
+print(kmeans_res$centers)
+
+
+aggregate(fifa_scaled, by = list(Cluster = kmeans_res$cluster), mean)
+
+```
+Cluster 1: Lower overall skill, younger, light, short, not very physical — could represent younger or low-rated players (possibly bench/reserve).
+
+Cluster 2: High overall, better at all skills (dribbling, shooting, passing), faster, more physical — likely elite attackers or midfielders.
+
+Cluster 3: Strong on defending and physic, poor dribbling/passing/shooting — possibly defenders or goalkeepers.
+
+The k-means algorithm separated the players into 3 distinct groups based on key attributes. Cluster 2 included players with high values in dribbling, shooting, and passing, suggesting this group represents offensive or creative roles. Cluster 3 showed strong defending and physical stats, likely corresponding to defenders or goalkeepers. Cluster 1 may represent lower-rated or younger players. This supports the hypothesis that player class can be revealed via clustering on key performance features.
+
+## DBSCAN Clustering
+```{r}
+
+# Estimate eps using kNN plot
+kNNdistplot(fifa_scaled, k = 5)
+abline(h = 1.5, col = "red")
+
+# Apply DBSCAN
+dbscan_res <- dbscan(fifa_scaled, eps = 1.0, minPts = 8)
+df_dbscan <- cbind(fifa_scaled, cluster = factor(dbscan_res$cluster))
+fifa_cluster$dbscan_cluster <- as.factor(dbscan_res$cluster)
+
+# Visualize
+fviz_cluster(list(data = fifa_scaled, cluster = dbscan_res$cluster), main = "DBSCAN Clustering")
+
+table(dbscan_res$cluster)
+
+```
+
+Cluster 0: 5,445 players (likely treated as noise or outliers by DBSCAN)
+
+Cluster 1: 11,656 players — the main dense cluster
+
+Clusters 2 & 3: Just 3 players each — these are very small dense pockets, possibly elite outliers or anomalies (superstar players?)
+
+After tuning DBSCAN with eps = 1.0 and minPts = 8, the algorithm produced a more nuanced clustering result. It identified one large cluster containing the majority of players (Cluster 1), a substantial number of outliers (Cluster 0), and two tiny clusters of only three players each. These small clusters likely represent outlier groups of elite or unique players. Compared to k-means, DBSCAN is more sensitive to local data density but less effective at forming meaningful, interpretable clusters in this high-dimensional feature space.
+
+
+## Decision Tree (Supervised for Comparison)
+```{r}
+
+# Create simplified class (assume roles based on overall + defending + attacking)
+fifa_cluster$role <- with(fifa_cluster, ifelse(defending > 60, "Defender",
+                                       ifelse(shooting > 60, "Attacker", "Midfielder")))
+
+# Train tree
+tree <- rpart(role ~ overall + age + height_cm + weight_kg + dribbling + passing + defending + shooting + pace + physic,
+              data = fifa_cluster, method = "class")
+
+# Plot
+rpart.plot(tree)
+
+```
+
+```{r}
+
+df_tree <- players  # original data
+df_tree$PositionGroup <- ifelse(grepl("GK", df$player_positions), "GK",
+                           ifelse(grepl("CB|LB|RB|WB|DM", df$player_positions), "Defender",
+                           ifelse(grepl("CAM|CM|LM|RM", df$player_positions), "Midfielder", "Attacker")))
+df_tree$PositionGroup <- as.factor(df_tree$PositionGroup)
+
+# Train/test split
+set.seed(123)
+train_idx <- sample(1:nrow(df_tree), 0.7 * nrow(df_tree))
+train <- df_tree[train_idx, ]
+test <- df_tree[-train_idx, ]
+
+# Train tree
+tree_model <- rpart(PositionGroup ~ dribbling + defending + passing + shooting + pace, data = train, method = "class")
+
+# Plot tree
+rpart.plot(tree_model, type = 2, extra = 104)
+
+# Predict and confusion matrix
+preds <- predict(tree_model, test, type = "class")
+table(Predicted = preds, Actual = test$PositionGroup)
+
+# Feature importance
+print(tree_model$variable.importance)
+
+```
+
+```{r}
+
+# Compute correlation matrix
+cor_mat <- cor(fifa_features)
+pheatmap(cor_mat, main = "Heatmap of Feature Correlations")
+
+```

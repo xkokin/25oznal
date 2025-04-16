@@ -1,0 +1,157 @@
+---
+title: "1_1"
+author: "xkokin"
+date: "2025-02-23"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+```
+
+## Load Data
+```{r}
+players <- read.csv("./players_22.csv")
+glimpse(players)
+```
+
+The dataset is loaded it has multiple columns with numerical and categorical values.
+
+## Task 2: Rows and Columns
+```{r}
+n_rows <- nrow(players)
+n_cols <- ncol(players)
+
+c_names <- colnames(players)
+c_names
+
+is_labeled <- !is.null(c_names)
+print(paste("Are all labeled:", is_labeled))
+
+columns_types <- sapply(players, class)
+is_homogeneous <- length(unique(columns_types)) == 1
+print(paste("Are all homogeneous:", is_homogeneous))
+```
+
+## Task 3: Column Type Counts
+```{r}
+col_type_counts <- table(sapply(players, class))
+print(col_type_counts)
+```
+
+## Task 4: Count Complete Records
+```{r}
+
+nrow(players)
+sum(rowSums(is.na(df)) > 0)
+
+```
+That means that we have 0 complete rows
+
+## Task 5: Count Duplicates
+```{r}
+num_duplicate_rows <- sum(duplicated(players))
+num_duplicate_cols <- sum(duplicated(t(players)))
+list(num_duplicate_rows = num_duplicate_rows, num_duplicate_cols = num_duplicate_cols)
+```
+```{r duplicated cols}
+duplicated(t(players))
+```
+This shows which columns are duplicated
+
+## Task 6: Numeric and Categorical Data Ranges
+```{r numeric ranges}
+numeric_data <- players[, sapply(players, is.numeric)]  
+numeric_ranges <- data.frame(
+  min = sapply(numeric_data, min, na.rm = TRUE),
+  max = sapply(numeric_data, max, na.rm = TRUE)
+)
+numeric_ranges
+```
+Check min and max values of each numeric column
+
+```{r categorical ranges}
+categorical_data <- players[, sapply(players, is.character)]
+categorical_values <- sapply(categorical_data, function(col) length(unique(col)))
+categorical_values <- data.frame(column = names(categorical_values), unique_count = categorical_values)
+
+categorical_values
+```
+Count uniique values
+
+## Task 7: Data Structure Analysis
+```{r}
+glimpse(players)
+```
+The first few columns are all about basic player info—names, age, nationality, club, and contract details. You also get their market value, wages, and some traits like preferred foot, weak foot rating, and skill moves. The middle part of the dataset dives into how good they are overall, with stats like pace, shooting, passing, dribbling, defending, and physicality. It then breaks things down even further into attacking, skill, movement, power, mentality, and defense, with goalkeeping stats in their own section. Later columns show how well a player fits into different positions on the field. The last part mostly has links for player photos, club logos, and national team flags. Some columns, like extra URLs and things like "real face" or player tags, don’t really add much useful info. If you wanted to clean this up, a good order would be player details first, then club and national team info, contract details, overall ratings, more detailed performance stats, position ratings, and then any media-related stuff. That way, it’s easier to read, less cluttered, and makes comparing players more straightforward.
+
+## Task 8: Best Player by Overall
+```{r}
+best_player <- players[which.max(players$overall),]
+best_player[c("short_name", "club_name", "overall", "wage_eur", "player_positions")]
+```
+
+## Task 9: Top 100 Players Analysis
+```{r}
+top_100 <- players %>%
+  arrange(desc(overall)) %>%
+  head(100)
+
+left_right_footed <- top_100 %>%
+  count(preferred_foot) %>%
+  mutate(proportion = n / sum(n))
+left_right_footed
+```
+
+## Task 10: Average Overall Rating by Foot Preference
+```{r}
+left_vs_right_avg <- players %>%
+  group_by(preferred_foot) %>%
+  summarise(avg_overall = mean(overall, na.rm = TRUE))
+left_vs_right_avg
+```
+
+## Task 11: Youngest High-Rated Left-Footed Player
+```{r}
+youngest_left <- players %>%
+  filter(preferred_foot == "Left" & overall > 80) %>%
+  arrange(age) %>%
+  slice(1)
+youngest_left[c("short_name", "age", "overall")]
+```
+
+## Task 12: Top Potential Left-Footed Players Under 35
+```{r}
+top_potential_left <- players %>%
+  filter(preferred_foot == "Left", age < 35) %>%
+  arrange(desc(potential)) %>%
+  head(5)
+top_potential_left[c("short_name", "age", "overall", "potential", "value_eur")]
+```
+
+## Task 13: Best Left-Footed Players by Specific Skills
+```{r best dribbler}
+best_dribbler <- players %>%
+  filter(preferred_foot == "Left") %>%
+  arrange(desc(dribbling)) %>%
+  slice(1)
+best_dribbler[c("short_name", "age", "dribbling")]
+```
+
+```{r left high shooter}
+left_high_shooters <- players %>%
+  filter(preferred_foot == "Left", shooting >= 85) %>%
+  count()
+left_high_shooters
+```
+
+```{r freekick taker}
+best_freekick_taker <- players %>%
+  filter(preferred_foot == "Left") %>%
+  arrange(desc(skill_fk_accuracy)) %>%
+  slice(1)
+best_freekick_taker[c("short_name", "skill_fk_accuracy")]
+
+```
